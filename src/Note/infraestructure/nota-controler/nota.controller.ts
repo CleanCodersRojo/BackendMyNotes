@@ -13,7 +13,6 @@ import { MongoNotaAdapter } from '../repositories_adapter/MongoNotaAdapter';
 import { EliminarNota } from 'src/Note/application/eliminar_Nota/EliminarNota';
 import { EliminarNotaDTO } from './EliminarNotaDTO';
 import { EliminarNotaComando } from '../../application/eliminar_Nota/EliminarNotaComando';
-import * as request from 'supertest';
 import { IdNota } from 'src/Note/domain/value_objects/IdNota';
 
 @Controller('nota')

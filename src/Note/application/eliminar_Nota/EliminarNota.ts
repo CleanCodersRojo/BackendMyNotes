@@ -1,7 +1,6 @@
 import { Either } from "src/core/ortogonal_solutions/Either";
 import { IServicio } from "../../../core/application/core_Comandos/IServicio";
 import { EliminarNotaComando } from "./EliminarNotaComando";
-import { IGeneradorUUID } from '../../../core/application/core_Comandos/IGeneradorUUID';
 import { Nota } from "src/Note/domain/Nota";
 import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
 import { MementoNota} from "../../domain/MementoNota";
