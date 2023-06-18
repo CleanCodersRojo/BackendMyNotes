@@ -31,8 +31,8 @@ export class CrearNota implements IServicio<MementoNota>{
         
         console.log(nota);    
         const vistaNota:MementoNota = nota.guardar();
-        const nuevaNota:Either<Optional<MementoNota>, Error> = await this.repositorio.createNota(vistaNota);
+        const nuevaNota:Either<MementoNota, Error> = await this.repositorio.createNota(vistaNota);
         
-        return Either.makeLeft<MementoNota, Error>(nuevaNota.getLeft().getValue());
+        return nuevaNota;
     }
 }

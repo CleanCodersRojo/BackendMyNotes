@@ -28,4 +28,8 @@ export class FabricaNota {
     
         return new Nota(i,t,c,fc,fe,fa,ubi,user);
     }
+
+    static fabricarIdNota(id:string):IdNota{
+        return new IdNota(id);
+    }
 }
