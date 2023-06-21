@@ -8,6 +8,7 @@ import { MementoNota } from 'src/Note/domain/MementoNota';
 import { IdNota } from 'src/Note/domain/value_objects/IdNota';
 import { InjectModel, Schema } from '@nestjs/mongoose';
 import { FabricaNota } from 'src/Note/domain/fabrics/FabricaNota';
+import { UbicacionNota } from '../../domain/value_objects/UbicacionNota';
 
 @Injectable()
 export class MongoNotaAdapter implements RepositorioNota{
@@ -77,10 +78,12 @@ export class MongoNotaAdapter implements RepositorioNota{
         const cuerpo:string = nota.cuerpo;
         const fechaEliminacion:Date = nota.fechaEliminacion;
         const fechaActualizacion:Date = nota.fechaActualizacion;
+        const latitud:number = nota.latitud;
+        const altitud:number = nota.altitud;
         try {
             const updatedNota = await this.notamodel.findOneAndUpdate(
                 {notaId: nota.notaId},
-                {titulo,cuerpo,fechaEliminacion,fechaActualizacion},
+                {titulo,cuerpo,fechaEliminacion,fechaActualizacion, latitud, altitud},
                 { new: true },
             )
             return Promise.resolve(Either.makeLeft<Optional<MementoNota>, Error>(new Optional<MementoNota>(nota)));

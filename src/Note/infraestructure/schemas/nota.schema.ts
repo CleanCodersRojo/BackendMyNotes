@@ -39,12 +39,12 @@ export class NotaSchema{
     fechaActualizacion:Date;
 
     @Prop({
-        required:true,
+        required:false,
     })
     latitud:number;
 
     @Prop({
-        required:true,
+        required:false,
     })
     altitud:number;
 

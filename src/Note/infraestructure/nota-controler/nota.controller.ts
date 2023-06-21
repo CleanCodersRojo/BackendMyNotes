@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CrearNotaComando } from 'src/Note/application/crear_Nota/CrearNotaComando';
 import { CrearNotaDTO } from './CrearNotaDTO';
 import { CommandHandler } from '../../../core/application/core_Comandos/CommandHandler';
@@ -15,6 +15,9 @@ import { EliminarNotaComando } from '../../application/eliminar_Nota/EliminarNot
 import { IdNota } from 'src/Note/domain/value_objects/IdNota';
 import { RepositorioNota } from 'src/Note/domain/repositories/RepositorioNota';
 import { MongoNotaAdapter } from '../repositories_adapter/MongoNotaAdapter';
+import { ModificarNotaDTO } from './ModificarNotaDTO';
+import { ModificarNota } from 'src/Note/application/modificar_Nota/ModificarNota';
+import { ModificarNotaComando } from 'src/Note/application/modificar_Nota/ModificarNotaComando';
 
 @Controller('nota')
 export class NotaController {
@@ -27,6 +30,9 @@ export class NotaController {
 
         const servicioEliminarNota:IServicio<MementoNota> = new EliminarNota(adapter);
         this.commandHandler.addComando(servicioEliminarNota, TipoComando.EliminarNota);
+
+        const servicioModificarNota:IServicio<MementoNota> = new ModificarNota(adapter);
+        this.commandHandler.addComando(servicioModificarNota, TipoComando.ModificarNota);
     }
 
     @Get(':id')
@@ -76,5 +82,31 @@ export class NotaController {
         }
     }
 
+    @Patch()
+    @UsePipes(ValidationPipe)
+    async modificarNota(@Body() nota:ModificarNotaDTO){
+        const fechaeliminada:Optional<Date> = new Optional<Date>(nota.fechaEliminacion);
+        const titulo:Optional<string> = new Optional<string>(nota.tituloModificado);
+        const cuerpo:Optional<string> = new Optional<string>(nota.cuerpoModificado);
+        const latitud:Optional<number> = new Optional<number>(nota.latitud);
+        const altitud:Optional<number> = new Optional<number>(nota.altitud);
 
+        //Validar que un valor de ubicacion si se tiene pero el otro no
+        if (!latitud.HasValue() && altitud.HasValue()){
+            return Either.makeRight<MementoNota,Error>(new Error());
+        } else if (latitud.HasValue() && !altitud.HasValue()){
+            return Either.makeRight<MementoNota,Error>(new Error());
+        }
+
+        const cmd:ModificarNotaComando = new ModificarNotaComando(nota.id,nota.fechaActualizacion,titulo, cuerpo, fechaeliminada, 
+                                                                    latitud, altitud, nota.usuarioId);
+        const result:Either<MementoNota,Error> = await this.commandHandler.execute(cmd);
+
+        if (result.isLeft()){
+            return result.getLeft();
+        }
+        else{
+            return result.getRight();
+        }
+    }
 }
