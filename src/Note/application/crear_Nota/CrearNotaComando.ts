@@ -8,11 +8,11 @@ export class CrearNotaComando extends ICommand{
     fechaCreacion:Date;
     fechaEliminacion:Optional<Date>;
     fechaActualizacion:Date;
-    latitud:number;
-    altitud:number;
+    latitud:Optional<number>;
+    altitud:Optional<number>;
     usuarioId:string;
 
-    constructor(t:string, c:string, fc:Date, fe:Optional<Date>, fa:Date, l:number, a:number, user:string){
+    constructor(t:string, c:string, fc:Date, fe:Optional<Date>, fa:Date, l:Optional<number>, a:Optional<number>, user:string){
         super();
         super.tipoComando = TipoComando.CrearNota;
         this.titulo = t;

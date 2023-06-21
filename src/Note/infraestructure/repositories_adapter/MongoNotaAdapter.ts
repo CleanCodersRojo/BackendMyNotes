@@ -19,8 +19,10 @@ export class MongoNotaAdapter implements RepositorioNota{
             const NotasMemento: MementoNota[]= [];
 
             for (const notajson of data){
-                let nota:Nota = FabricaNota.fabricar(notajson.notaId, notajson.titulo,notajson.cuerpo,notajson.fechaCreacion,new Optional<Date>(notajson.fechaEliminacion),notajson.fechaActualizacion,
-                notajson.latitud,notajson.altitud, notajson.usuarioId);
+                let nota:Nota = FabricaNota.fabricar(notajson.notaId, notajson.titulo,notajson.cuerpo,notajson.fechaCreacion,
+                                                        new Optional<Date>(notajson.fechaEliminacion),notajson.fechaActualizacion,
+                                                        new Optional<number>(notajson.latitud),new Optional<number>(notajson.altitud), 
+                                                        notajson.usuarioId);
 
                 const vistaNota:MementoNota = nota.guardar();
                 NotasMemento.push(vistaNota);
@@ -39,8 +41,8 @@ export class MongoNotaAdapter implements RepositorioNota{
             const notaBuscada = await this.notamodel.find({notaId: id.getId()});
             const nota:Nota = FabricaNota.fabricar(notaBuscada[0].notaId, notaBuscada[0].titulo,notaBuscada[0].cuerpo,
                                                     notaBuscada[0].fechaCreacion,new Optional<Date>(notaBuscada[0].fechaEliminacion),
-                                                    notaBuscada[0].fechaActualizacion, notaBuscada[0].latitud,
-                                                    notaBuscada[0].altitud, notaBuscada[0].usuarioId);
+                                                    notaBuscada[0].fechaActualizacion, new Optional<number>(notaBuscada[0].latitud),
+                                                    new Optional<number>(notaBuscada[0].altitud), notaBuscada[0].usuarioId);
 
             return Promise.resolve(Either.makeLeft<Optional<Nota>, Error>(new Optional<Nota>(nota)));
         } catch (e) {

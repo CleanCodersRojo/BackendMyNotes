@@ -13,12 +13,12 @@ export class MementoNota{
     fechaCreacion:Date;
     fechaEliminacion?:Date;
     fechaActualizacion:Date;
-    latitud:number;
-    altitud:number;
+    latitud?:number;
+    altitud?:number;
     usuarioId:string;
 
     constructor(id:IdNota, titulo:TituloNota, cuerpo:CuerpoNota, fechaCreacion:FechaNota, fechaEliminacion:Optional<FechaNota>, 
-        fechaActualizacion:FechaNota, ubicacion:UbicacionNota, usuarioId:IdUser){
+        fechaActualizacion:FechaNota, ubicacion:Optional<UbicacionNota>, usuarioId:IdUser){
         this.notaId = id.getId();
         this.titulo = titulo.getTitulo();
         this.cuerpo = cuerpo.getCuerpo();
@@ -26,8 +26,11 @@ export class MementoNota{
         if (fechaEliminacion.HasValue())
             this.fechaEliminacion = fechaEliminacion.getValue().getFecha();
         this.fechaActualizacion = fechaActualizacion.getFecha();
-        this.latitud = ubicacion.getLatitud();
-        this.altitud = ubicacion.getAltitud();
+        if (ubicacion.HasValue()){
+            this.latitud = ubicacion.getValue().getLatitud();
+            this.altitud = ubicacion.getValue().getAltitud();
+        }
+        
         this.usuarioId = usuarioId.getId();
     }
 }

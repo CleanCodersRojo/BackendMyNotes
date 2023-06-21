@@ -39,9 +39,18 @@ export class NotaController {
     async crearNota(@Body() nuevaNota:CrearNotaDTO){
         
         const fechaeliminada:Optional<Date> = new Optional<Date>(nuevaNota.fechaEliminacion);
+        const latitud:Optional<number> = new Optional<number>(nuevaNota.latitud);
+        const altitud:Optional<number> = new Optional<number>(nuevaNota.altitud);
+
+        //Validar que un valor de ubicacion si se tiene pero el otro no
+        if (!latitud.HasValue() && altitud.HasValue()){
+            return Either.makeRight<MementoNota,Error>(new Error());
+        } else if (latitud.HasValue() && !altitud.HasValue()){
+            return Either.makeRight<MementoNota,Error>(new Error());
+        }
+
         const cmd:CrearNotaComando = new CrearNotaComando(nuevaNota.titulo, nuevaNota.cuerpo, nuevaNota.fechaCreacion, fechaeliminada,
-                                                            nuevaNota.fechaActualizacion, nuevaNota.latitud, nuevaNota.altitud, 
-                                                            nuevaNota.usuarioId);
+                                                            nuevaNota.fechaActualizacion, latitud, altitud, nuevaNota.usuarioId);
         
         const result:Either<MementoNota,Error> = await this.commandHandler.execute(cmd);
 
@@ -54,6 +63,7 @@ export class NotaController {
     }
 
     @Delete()
+    @UsePipes(ValidationPipe)
     async eliminarNota(@Body() nota:EliminarNotaDTO){
         const cmd:EliminarNotaComando = new EliminarNotaComando(nota.id,nota.fechaEliminacion, nota.usuarioId);
         const result:Either<MementoNota,Error> = await this.commandHandler.execute(cmd);

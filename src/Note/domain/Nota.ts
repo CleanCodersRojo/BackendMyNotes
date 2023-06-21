@@ -14,12 +14,12 @@ export class Nota {
     private fechaCreacion:FechaNota;
     private fechaEliminacion:Optional<FechaNota>;
     private fechaActualizacion:FechaNota;
-    private ubicacion:UbicacionNota;
+    private ubicacion:Optional<UbicacionNota>;
     private usuario:IdUser;
 
 
     constructor(id:IdNota, t:TituloNota, c:CuerpoNota, fechaCreacion:FechaNota, fechaEliminacion:Optional<FechaNota>, 
-                fechaActualizacion:FechaNota, ubicacion:UbicacionNota, user:IdUser){
+                fechaActualizacion:FechaNota, ubicacion:Optional<UbicacionNota>, user:IdUser){
         this.notaId = id;
         this.titulo = t;
         this.cuerpo = c;

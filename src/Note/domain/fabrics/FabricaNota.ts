@@ -9,7 +9,7 @@ import { IdUser } from "src/User/domain/value_objects/IdUser";
 
 export class FabricaNota {
     static fabricar(id:string, titulo:string, cuerpo:string, fechaCreacion:Date, fechaEliminacion:Optional<Date>, fechaActualizacion:Date,
-                     latitud:number, altitud:number, usuarioId:string):Nota{
+                     latitud:Optional<number>, altitud:Optional<number>, usuarioId:string):Nota{
 
         const i:IdNota = new IdNota(id);
         const t:TituloNota = new TituloNota(titulo);
@@ -23,7 +23,11 @@ export class FabricaNota {
             fe = new Optional<FechaNota>();
 
         const fa:FechaNota = new FechaNota(fechaActualizacion);
-        const ubi:UbicacionNota = new UbicacionNota(latitud, altitud);
+        let ubi:Optional<UbicacionNota>
+        if (latitud.HasValue() && altitud.HasValue())
+            ubi = new Optional<UbicacionNota>(new UbicacionNota(latitud.getValue(), altitud.getValue()));
+        else
+            ubi = new Optional<UbicacionNota>();
         const user:IdUser = new IdUser(usuarioId);
     
         return new Nota(i,t,c,fc,fe,fa,ubi,user);

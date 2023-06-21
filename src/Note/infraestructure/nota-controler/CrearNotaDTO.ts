@@ -12,9 +12,9 @@ export class CrearNotaDTO{
     fechaEliminacion:Date;
     @IsDateString()
     fechaActualizacion:Date;
-    @IsNumber()
+    @IsNumber() @IsOptional()
     latitud:number;
-    @IsNumber()
+    @IsNumber() @IsOptional()
     altitud:number;
     @IsString()
     usuarioId:string;
