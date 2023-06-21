@@ -5,10 +5,12 @@ import { IdNota } from '../value_objects/IdNota';
 import { Nota } from '../Nota';
 
 export interface RepositorioNota {
-  buscarNotaporId(id:IdNota):Promise<Either<Optional<Nota>, Error>>;
+
+  buscarNotasPorUsuario(id:string):Promise<Either<Optional<MementoNota[]>, Error>>
+  buscarNotaPorId(id:IdNota):Promise<Either<Optional<Nota>, Error>>;
   
   createNota(nota:MementoNota): Promise<Either<MementoNota, Error>>;
   eliminarNota(id:IdNota):Promise<Either<Optional<IdNota>, Error>>;
-  modificarNota(nota:MementoNota):Promise<Either<Optional<MementoNota>, Error>>;
+  modificarNota(nota:MementoNota): Promise<Either<Optional<MementoNota>, Error>>
 
 }

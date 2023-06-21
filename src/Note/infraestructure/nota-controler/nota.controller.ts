@@ -9,15 +9,16 @@ import { GeneradorUUID } from '../UUID/GeneradorUUID';
 import { Either } from 'src/core/ortogonal_solutions/Either';
 import { Optional } from 'src/core/ortogonal_solutions/Optional';
 import { MementoNota } from 'src/Note/domain/MementoNota';
-import { MongoNotaAdapter } from '../repositories_adapter/MongoNotaAdapter';
 import { EliminarNota } from 'src/Note/application/eliminar_Nota/EliminarNota';
 import { EliminarNotaDTO } from './EliminarNotaDTO';
 import { EliminarNotaComando } from '../../application/eliminar_Nota/EliminarNotaComando';
 import { IdNota } from 'src/Note/domain/value_objects/IdNota';
+import { RepositorioNota } from 'src/Note/domain/repositories/RepositorioNota';
+import { MongoNotaAdapter } from '../repositories_adapter/MongoNotaAdapter';
 
 @Controller('nota')
 export class NotaController {
-    commandHandler:CommandHandler<MementoNota> = new CommandHandler();
+    private commandHandler:CommandHandler<MementoNota> = new CommandHandler();
 
     constructor(private adapter: MongoNotaAdapter){
         /*INYECCION DE DEPENDENCIAS*/
@@ -25,12 +26,12 @@ export class NotaController {
         this.commandHandler.addComando(servicioCrearNota, TipoComando.CrearNota);
 
         const servicioEliminarNota:IServicio<MementoNota> = new EliminarNota(adapter);
-        this.commandHandler.addComando(servicioCrearNota, TipoComando.EliminarNota);
+        this.commandHandler.addComando(servicioEliminarNota, TipoComando.EliminarNota);
     }
 
     @Get(':id')
     async getNoteById(@Param('id') id){
-        return await this.adapter.buscarNotaporId(new IdNota(id));
+        return await this.adapter.buscarNotaPorId(new IdNota(id));
     }
 
     @Post()
@@ -61,9 +62,8 @@ export class NotaController {
             return result.getLeft();
         }
         else{
-            return "prueba fallida"
+            return result.getRight();
         }
-
     }
 
 
