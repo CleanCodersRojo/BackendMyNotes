@@ -7,9 +7,9 @@ export class ModificarNotaDTO{
     @IsDateString()
     fechaActualizacion:Date;
     @IsString() @IsOptional()
-    tituloModificado:string;
+    titulo:string;
     @IsString() @IsOptional()
-    cuerpoModificado:string;
+    cuerpo:string;
     @IsDateString() @IsOptional()
     fechaEliminacion:Date;
     @IsNumber() @IsOptional()

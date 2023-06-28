@@ -1,25 +1,26 @@
-import { Either } from "src/core/ortogonal_solutions/Either";
-import { IServicio } from "../../../core/application/core_Comandos/IServicio";
+import { Either } from "src/Shared/utilities/Either";
+import { IServicio } from "../../../Shared/application/Shared_Commands/IServicio";
 import { EliminarNotaComando } from "./EliminarNotaComando";
 import { Nota } from "src/Note/domain/Nota";
 import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
-import { MementoNota} from "../../domain/MementoNota";
+import { NotaSnapshot} from "../../domain/NotaSnapshot";
 import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
-import { Optional } from "src/core/ortogonal_solutions/Optional";
+import { Optional } from "src/Shared/utilities/Optional";
 import { IdNota } from "src/Note/domain/value_objects/IdNota";
 
-export class EliminarNota implements IServicio<MementoNota>{
+export class EliminarNota implements IServicio<NotaSnapshot>{
     private readonly repositorio:RepositorioNota;
 
     constructor(r:RepositorioNota){
         this.repositorio = r;
     }
 
-    public async execute(cmd:EliminarNotaComando):Promise<Either<MementoNota, Error>>{
-        /*        */
-        //MANEJO DE EITHER Y OPTIONAL
+    public async execute(cmd:EliminarNotaComando):Promise<Either<NotaSnapshot, Error>>{
+        //Buscar la nota primero de la base de datos
         let nota:Nota;
         const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaNota.fabricarIdNota(cmd.id));
+        
+        //MANEJO DE EITHER Y OPTIONAL
         if (v1.isLeft()){
             const v2:Optional<Nota> = v1.getLeft();
             if (v2.HasValue()){
@@ -27,32 +28,31 @@ export class EliminarNota implements IServicio<MementoNota>{
             }
             else {
                 //Error de Nota no encontrada
-                return Either.makeRight<MementoNota, Error>(new Error());
+                return Either.makeRight<NotaSnapshot, Error>(new Error());
             }
         }
         else {
-            return Either.makeRight<MementoNota, Error>(v1.getRight());
+            return Either.makeRight<NotaSnapshot, Error>(v1.getRight());
         }
         
-        //
-        const notaEliminada:MementoNota = nota.guardar();
-        console.log(nota);
+        //Snapshot de retorno de la nota a eliminar
+        const notaEliminada:NotaSnapshot = nota.getSnapshot();
+
+        //Eliminar Nota de la base de datos
         const idEliminado:Either<Optional<IdNota>, Error> = await this.repositorio.eliminarNota(FabricaNota.fabricarIdNota(cmd.id));
         
         //MANEJO DE EITHER Y OPTIONAL
         if(idEliminado.isLeft()){
             if (idEliminado.getLeft().HasValue()){
-                return Either.makeLeft<MementoNota, Error>(notaEliminada);
+                return Either.makeLeft<NotaSnapshot, Error>(notaEliminada);
             }
             else{
                 //Error de Nota no encontrada
-                return Either.makeRight<MementoNota, Error>(new Error());
+                return Either.makeRight<NotaSnapshot, Error>(new Error());
             }
         }
         else {
-            return Either.makeRight<MementoNota, Error>(idEliminado.getRight());
+            return Either.makeRight<NotaSnapshot, Error>(idEliminado.getRight());
         }
-        
-        
     }
 }

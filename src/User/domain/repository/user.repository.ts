@@ -1,4 +1,4 @@
-import { Optional } from "src/core/ortogonal_solutions/Optional";
+import { Optional } from "src/Shared/utilities/Optional";
 import { User } from "../User";
 
 export interface UserRepository{

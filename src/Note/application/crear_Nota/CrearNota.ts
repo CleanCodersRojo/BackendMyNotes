@@ -1,14 +1,13 @@
-import { Either } from "src/core/ortogonal_solutions/Either";
-import { IServicio } from "../../../core/application/core_Comandos/IServicio";
+import { Either } from "src/Shared/utilities/Either";
+import { IServicio } from "../../../Shared/application/Shared_Commands/IServicio";
 import { CrearNotaComando } from "./CrearNotaComando";
-import { IGeneradorUUID } from '../../../core/application/core_Comandos/IGeneradorUUID';
+import { IGeneradorUUID } from '../../../Shared/application/Shared_Commands/IGeneradorUUID';
 import { Nota } from "src/Note/domain/Nota";
 import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
-import { MementoNota} from "../../domain/MementoNota";
+import { NotaSnapshot} from "../../domain/NotaSnapshot";
 import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
-import { Optional } from "src/core/ortogonal_solutions/Optional";
 
-export class CrearNota implements IServicio<MementoNota>{
+export class CrearNota implements IServicio<NotaSnapshot>{
     private readonly generadorUUID:IGeneradorUUID;
     private readonly repositorio:RepositorioNota;
 
@@ -17,22 +16,23 @@ export class CrearNota implements IServicio<MementoNota>{
         this.repositorio = r;
     }
 
-    public async execute(cmd:CrearNotaComando):Promise<Either<MementoNota, Error>>{
-        /*
-            generar uuid  ####
-            crear objecto 
-            "guardar nota"
-                - publicar evento de notacreada
-                - guardar y actualizar lo que se deba actualizar  
-        */
+    public async execute(cmd:CrearNotaComando):Promise<Either<NotaSnapshot, Error>>{
+        //Generar ID de la nota mediante un adaptador
         let notaId:string = this.generadorUUID.generate();
-        let nota:Nota = FabricaNota.fabricar(notaId, cmd.titulo,cmd.cuerpo,cmd.fechaCreacion,cmd.fechaEliminacion,cmd.fechaActualizacion,
-                                                cmd.latitud,cmd.altitud, cmd.usuarioId);
-        
-        console.log(nota);    
-        const vistaNota:MementoNota = nota.guardar();
-        const nuevaNota:Either<MementoNota, Error> = await this.repositorio.createNota(vistaNota);
-        
-        return nuevaNota;
+
+        //Fabrica de Nota a partir de un comando****
+        let nota:Nota = FabricaNota.fabricar(notaId, cmd.titulo, cmd.cuerpo, cmd.fechaCreacion, cmd.fechaEliminacion,
+                                            cmd.fechaActualizacion, cmd.latitud, cmd.altitud, cmd.usuarioId);
+
+        //Guardar la nueva Nota en la BD
+        const nuevaNota:Either<Nota, Error> = await this.repositorio.guardarNota(nota);
+
+        //Retornar el resultado
+        if (nuevaNota.isLeft()){
+            return Either.makeLeft<NotaSnapshot, Error>(nota.getSnapshot());
+        }
+        else {
+            return Either.makeRight<NotaSnapshot, Error>(nuevaNota.getRight());
+        }
     }
 }

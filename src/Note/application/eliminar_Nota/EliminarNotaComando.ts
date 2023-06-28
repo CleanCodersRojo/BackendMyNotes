@@ -1,5 +1,5 @@
-import { TipoComando } from "../../../core/application/core_Comandos/TipoComandoNotas";
-import { ICommand } from "../../../core/application/core_Comandos/ICommand";
+import { TipoComando } from "../../../Shared/application/Shared_Commands/TipoComandoNotas";
+import { ICommand } from "../../../Shared/application/Shared_Commands/ICommand";
 
 export class EliminarNotaComando extends ICommand{
     id:string;

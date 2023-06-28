@@ -1,5 +1,6 @@
 import {Schema,Prop,SchemaFactory} from "@nestjs/mongoose";
 import { Document,Model } from "mongoose";
+import { Optional } from "src/Shared/utilities/Optional";
 
 export type NotasDocument = NotaSchema & Document;
 
@@ -31,7 +32,7 @@ export class NotaSchema{
     @Prop({
         required:false,
     })
-    fechaEliminacion:Date;
+    fechaEliminacion:Optional<Date>;
 
     @Prop({
         required:true,
@@ -41,12 +42,12 @@ export class NotaSchema{
     @Prop({
         required:false,
     })
-    latitud:number;
+    latitud:Optional<number>;
 
     @Prop({
         required:false,
     })
-    altitud:number;
+    altitud:Optional<number>;
 
     @Prop({
         required:true,

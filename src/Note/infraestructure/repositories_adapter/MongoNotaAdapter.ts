@@ -1,49 +1,45 @@
 import {Injectable} from '@nestjs/common';
 import { Nota } from 'src/Note/domain/Nota';
-import {notaModel} from 'src/Note/infraestructure/schemas/nota.schema';
-import { Either } from 'src/core/ortogonal_solutions/Either';
-import { Optional } from 'src/core/ortogonal_solutions/Optional';
+import {NotaSchema, notaModel} from 'src/Note/infraestructure/schemas/nota.schema';
+import { Either } from 'src/Shared/utilities/Either';
+import { Optional } from 'src/Shared/utilities/Optional';
 import { RepositorioNota } from 'src/Note/domain/repositories/RepositorioNota';
-import { MementoNota } from 'src/Note/domain/MementoNota';
+import { NotaSnapshot } from 'src/Note/domain/NotaSnapshot';
 import { IdNota } from 'src/Note/domain/value_objects/IdNota';
 import { InjectModel, Schema } from '@nestjs/mongoose';
 import { FabricaNota } from 'src/Note/domain/fabrics/FabricaNota';
 import { UbicacionNota } from '../../domain/value_objects/UbicacionNota';
+import { ConvertidorNota } from './ConvertidorNota';
+import { IdUser } from 'src/User/domain/value_objects/IdUser';
 
 @Injectable()
 export class MongoNotaAdapter implements RepositorioNota{
     constructor(@InjectModel(Nota.name) private readonly notamodel:notaModel){}
 
-    async buscarNotasPorUsuario(id:string):Promise<Either<Optional<MementoNota[]>, Error>>{
+    async buscarNotasPorUsuario(id:IdUser):Promise<Either<Optional<Nota[]>, Error>>{
         try {
-            const data = await this.notamodel.find({usuarioId:id})
-            const NotasMemento: MementoNota[]= [];
+            const data = await this.notamodel.find({usuarioId:id.getId()})
+            const Notas: Nota[]= [];
 
             for (const notajson of data){
-                let nota:Nota = FabricaNota.fabricar(notajson.notaId, notajson.titulo,notajson.cuerpo,notajson.fechaCreacion,
-                                                        new Optional<Date>(notajson.fechaEliminacion),notajson.fechaActualizacion,
-                                                        new Optional<number>(notajson.latitud),new Optional<number>(notajson.altitud), 
-                                                        notajson.usuarioId);
-
-                const vistaNota:MementoNota = nota.guardar();
-                NotasMemento.push(vistaNota);
-                
+                const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notajson);
+                const nota:Nota = FabricaNota.restaurarNota(snapshot);
+                Notas.push(nota);   
             }
-            console.log(NotasMemento);
+            console.log(Notas);
 
-            return Promise.resolve(Either.makeLeft<Optional<MementoNota[]>,Error>(new Optional<MementoNota[]>(NotasMemento)));
+            return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(Notas)));
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<MementoNota[]>, Error>(e))
+            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(e))
         }
     }
     
     async buscarNotaPorId(id: IdNota): Promise<Either<Optional<Nota>, Error>> {
         try {
-            const notaBuscada = await this.notamodel.find({notaId: id.getId()});
-            const nota:Nota = FabricaNota.fabricar(notaBuscada[0].notaId, notaBuscada[0].titulo,notaBuscada[0].cuerpo,
-                                                    notaBuscada[0].fechaCreacion,new Optional<Date>(notaBuscada[0].fechaEliminacion),
-                                                    notaBuscada[0].fechaActualizacion, new Optional<number>(notaBuscada[0].latitud),
-                                                    new Optional<number>(notaBuscada[0].altitud), notaBuscada[0].usuarioId);
+            const notaBuscada = await this.notamodel.findOne({notaId: id.getId()});
+
+            const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notaBuscada);
+            const nota:Nota = FabricaNota.restaurarNota(snapshot);
 
             return Promise.resolve(Either.makeLeft<Optional<Nota>, Error>(new Optional<Nota>(nota)));
         } catch (e) {
@@ -51,16 +47,16 @@ export class MongoNotaAdapter implements RepositorioNota{
         }
     }
 
-    async createNota(nota:MementoNota): Promise<Either<MementoNota, Error>> {
-        //const view:VistaNota = new VistaNota();
+    //GuardarNota en la Base de Datos
+    async guardarNota(nota:Nota): Promise<Either<Nota, Error>> {
         console.log('CreateNotaDTO', nota);
+
+        const snapshot:NotaSnapshot = nota.getSnapshot();
         try {
-            //console.log('prueba2', await new this.notamodel(nota));
-            const notaGuardada = await (new this.notamodel(nota)).save();
-            
-            return Either.makeLeft<MementoNota, Error>(nota);
+            const notaGuardada = await (new this.notamodel(snapshot)).save();
+            return Either.makeLeft<Nota, Error>(nota);
         } catch (e) {
-            return Either.makeRight<MementoNota, Error>(e);
+            return Either.makeRight<Nota, Error>(e);
         }
     }
 
@@ -73,22 +69,25 @@ export class MongoNotaAdapter implements RepositorioNota{
         }
     }
     
-    async modificarNota(nota:MementoNota): Promise<Either<Optional<MementoNota>, Error>> {
-        const titulo:string = nota.titulo;
-        const cuerpo:string = nota.cuerpo;
-        const fechaEliminacion:Date = nota.fechaEliminacion;
-        const fechaActualizacion:Date = nota.fechaActualizacion;
-        const latitud:number = nota.latitud;
-        const altitud:number = nota.altitud;
+    async modificarNota(nota:Nota): Promise<Either<Optional<Nota>, Error>> {
+        const snapshot:NotaSnapshot = nota.getSnapshot(); 
+        const titulo:string = snapshot.titulo;
+        const cuerpo:string = snapshot.cuerpo;
+        const fechaEliminacion:Optional<Date> = snapshot.fechaEliminacion;
+        const fechaActualizacion:Date = snapshot.fechaActualizacion;
+        const latitud:Optional<number> = snapshot.latitud;
+        const altitud:Optional<number> = snapshot.altitud;
         try {
             const updatedNota = await this.notamodel.findOneAndUpdate(
-                {notaId: nota.notaId},
+                {notaId: snapshot.notaId},
                 {titulo,cuerpo,fechaEliminacion,fechaActualizacion, latitud, altitud},
                 { new: true },
             )
-            return Promise.resolve(Either.makeLeft<Optional<MementoNota>, Error>(new Optional<MementoNota>(nota)));
+
+            console.log(updatedNota);
+            return Promise.resolve(Either.makeLeft<Optional<Nota>, Error>(new Optional<Nota>(nota)));
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<MementoNota>, Error>(e));
+            return Promise.resolve(Either.makeRight<Optional<Nota>, Error>(e));
         } 
     }
 }
