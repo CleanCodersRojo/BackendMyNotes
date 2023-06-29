@@ -1,5 +1,6 @@
 import {Schema,Prop,SchemaFactory} from "@nestjs/mongoose";
 import { Document,Model } from "mongoose";
+import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { Optional } from "src/Shared/utilities/Optional";
 
 export type NotasDocument = NotaSchema & Document;
@@ -22,7 +23,7 @@ export class NotaSchema{
         required:true,
         trim:true
     })
-    cuerpo:string;
+    cuerpo:Array<{tipo:TipoParteCuerpo}>;
 
     @Prop({
         required:true,

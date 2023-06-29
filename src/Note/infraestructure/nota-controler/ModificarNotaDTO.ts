@@ -1,4 +1,5 @@
-import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
+import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
 
 
 export class ModificarNotaDTO{
@@ -8,8 +9,8 @@ export class ModificarNotaDTO{
     fechaActualizacion:Date;
     @IsString() @IsOptional()
     titulo:string;
-    @IsString() @IsOptional()
-    cuerpo:string;
+    @IsArray() @IsOptional()
+    cuerpo:Array<{tipo:TipoParteCuerpo}>;
     @IsDateString() @IsOptional()
     fechaEliminacion:Date;
     @IsNumber() @IsOptional()

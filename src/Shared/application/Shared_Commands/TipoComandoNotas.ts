@@ -1,3 +1,3 @@
 export enum TipoComando{
-    CrearNota, ActualizarNota, ModificarNota,EliminarNota
+    CrearNota, ModificarNota, EliminarNota
 }

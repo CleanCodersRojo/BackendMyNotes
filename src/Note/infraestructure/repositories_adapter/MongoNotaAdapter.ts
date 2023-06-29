@@ -11,6 +11,7 @@ import { FabricaNota } from 'src/Note/domain/fabrics/FabricaNota';
 import { UbicacionNota } from '../../domain/value_objects/UbicacionNota';
 import { ConvertidorNota } from './ConvertidorNota';
 import { IdUser } from 'src/User/domain/value_objects/IdUser';
+import { TipoParteCuerpo } from 'src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo';
 
 @Injectable()
 export class MongoNotaAdapter implements RepositorioNota{
@@ -72,7 +73,7 @@ export class MongoNotaAdapter implements RepositorioNota{
     async modificarNota(nota:Nota): Promise<Either<Optional<Nota>, Error>> {
         const snapshot:NotaSnapshot = nota.getSnapshot(); 
         const titulo:string = snapshot.titulo;
-        const cuerpo:string = snapshot.cuerpo;
+        const cuerpo:Array<{tipo:TipoParteCuerpo}> = snapshot.cuerpo;
         const fechaEliminacion:Optional<Date> = snapshot.fechaEliminacion;
         const fechaActualizacion:Date = snapshot.fechaActualizacion;
         const latitud:Optional<number> = snapshot.latitud;

@@ -18,6 +18,7 @@ import { ModificarNotaDTO } from './ModificarNotaDTO';
 import { ModificarNota } from 'src/Note/application/modificar_Nota/ModificarNota';
 import { ModificarNotaComando } from 'src/Note/application/modificar_Nota/ModificarNotaComando';
 import { IdUser } from 'src/User/domain/value_objects/IdUser';
+import { TipoParteCuerpo } from 'src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo';
 
 @Controller('nota')
 export class NotaController {
@@ -61,7 +62,8 @@ export class NotaController {
 
         const cmd:CrearNotaComando = new CrearNotaComando(nuevaNota.titulo, nuevaNota.cuerpo, nuevaNota.fechaCreacion, fechaeliminada,
                                                             nuevaNota.fechaActualizacion, latitud, altitud, nuevaNota.usuarioId);
-        
+        console.log("CMD",cmd);
+        console.log("TIPO",TipoParteCuerpo.Imagen);
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
 
         return result;
@@ -81,7 +83,7 @@ export class NotaController {
     async modificarNota(@Body() nota:ModificarNotaDTO){
         const fechaeliminada:Optional<Date> = new Optional<Date>(nota.fechaEliminacion);
         const titulo:Optional<string> = new Optional<string>(nota.titulo);
-        const cuerpo:Optional<string> = new Optional<string>(nota.cuerpo);
+        const cuerpo:Optional<Array<{tipo:TipoParteCuerpo}>> = new Optional<Array<{tipo:TipoParteCuerpo}>>(nota.cuerpo);
         const latitud:Optional<number> = new Optional<number>(nota.latitud);
         const altitud:Optional<number> = new Optional<number>(nota.altitud);
 

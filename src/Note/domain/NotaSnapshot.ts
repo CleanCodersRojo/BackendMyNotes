@@ -5,11 +5,12 @@ import { CuerpoNota } from "./value_objects/CuerpoNota";
 import { FechaNota } from "./value_objects/FechaNota";
 import { UbicacionNota } from './value_objects/UbicacionNota';
 import { IdUser } from "src/User/domain/value_objects/IdUser";
+import { TipoParteCuerpo } from "./value_objects/Cuerpo_VO/TipoParteCuerpo";
 
 export class NotaSnapshot{
     notaId:string;
     titulo:string;
-    cuerpo:string;
+    cuerpo:Array<{tipo:TipoParteCuerpo}>
     fechaCreacion:Date;
     fechaEliminacion:Optional<Date>;
     fechaActualizacion:Date;
@@ -17,7 +18,7 @@ export class NotaSnapshot{
     altitud:Optional<number>;
     usuarioId:string;
 
-    constructor(id:string, titulo:string, cuerpo:string, fechaCreacion:Date, fechaEliminacion:Optional<Date>, 
+    constructor(id:string, titulo:string, cuerpo:Array<{tipo:TipoParteCuerpo}>, fechaCreacion:Date, fechaEliminacion:Optional<Date>, 
         fechaActualizacion:Date, latitud:Optional<number>, altitud:Optional<number>, usuarioId:string){
         this.notaId = id;
         this.titulo = titulo;
