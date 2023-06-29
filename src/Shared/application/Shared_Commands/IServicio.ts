@@ -1,4 +1,4 @@
-import { Either } from "src/core/ortogonal_solutions/Either";
+import { Either } from "src/Shared/utilities/Either";
 import { ICommand } from "./ICommand";
 
 export interface IServicio<TView>{

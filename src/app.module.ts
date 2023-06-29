@@ -3,7 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { notasSchema} from './Note/infraestructure/schemas/nota.schema';
 import { Nota } from './Note/domain/Nota';
 import { NotaController } from './Note/infraestructure/nota-controler/nota.controller';
-import { MongoNotaRepositorio } from './Note/infraestructure/repositories_adapter/nota.repository.adapter';
 import { MongoNotaAdapter } from './Note/infraestructure/repositories_adapter/MongoNotaAdapter';
 
 @Module({
@@ -14,7 +13,6 @@ import { MongoNotaAdapter } from './Note/infraestructure/repositories_adapter/Mo
    }])
   ],
   controllers: [NotaController],
-  providers: [MongoNotaAdapter, { provide: "RepositorioNota", useClass:MongoNotaRepositorio}
-  ],
+  providers: [MongoNotaAdapter],
 })
 export class AppModule {}

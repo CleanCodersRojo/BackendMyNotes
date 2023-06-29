@@ -1,17 +1,17 @@
 import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 
 
-export class CrearNotaDTO{
+export class ModificarNotaDTO{
     @IsString()
-    titulo:string;
-    @IsString()
-    cuerpo:string;
-    @IsDateString()
-    fechaCreacion:Date;
-    @IsDateString() @IsOptional()
-    fechaEliminacion:Date;
+    id:string;
     @IsDateString()
     fechaActualizacion:Date;
+    @IsString() @IsOptional()
+    titulo:string;
+    @IsString() @IsOptional()
+    cuerpo:string;
+    @IsDateString() @IsOptional()
+    fechaEliminacion:Date;
     @IsNumber() @IsOptional()
     latitud:number;
     @IsNumber() @IsOptional()

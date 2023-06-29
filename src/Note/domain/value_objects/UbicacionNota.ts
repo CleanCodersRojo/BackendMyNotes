@@ -1,12 +1,12 @@
-import { IValueObject } from "src/core/domain/IValueObject";
+import { IValueObject } from "src/Shared/domain/IValueObject";
 
 export class UbicacionNota implements IValueObject{
     private latitud:number;
-    private longitud:number;
+    private altitud:number;
 
     constructor(l:number, a:number){
         this.latitud = l;
-        this.longitud = a;
+        this.altitud = a;
     }
 
     public getLatitud():number{
@@ -14,11 +14,11 @@ export class UbicacionNota implements IValueObject{
     }
 
     public getAltitud():number{
-        return this.longitud;
+        return this.altitud;
     }
 
     public equals(other:UbicacionNota):boolean{
-        if((other.getAltitud() == this.longitud) && (other.getLatitud() == this.latitud))
+        if((other.getAltitud() == this.altitud) && (other.getLatitud() == this.latitud))
             return true;
         else
             return false;

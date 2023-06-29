@@ -1,4 +1,4 @@
-import { Optional } from "src/core/ortogonal_solutions/Optional";
+import { Optional } from "src/Shared/utilities/Optional";
 import { IdUser } from "src/User/domain/value_objects/IdUser";
 import { UserName } from "../value_objects/UserName";
 import { UserEmail } from "../value_objects/UserEmail";
