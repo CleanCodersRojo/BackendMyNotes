@@ -6,16 +6,17 @@ import { CuerpoNota } from "../value_objects/CuerpoNota";
 import { FechaNota } from "../value_objects/FechaNota";
 import { UbicacionNota } from "../value_objects/UbicacionNota";
 import { IdUser } from "src/User/domain/value_objects/IdUser";
-import { NotaSnapshot } from "src/Note/domain/NotaSnapshot";
+import { NotaSnapshot } from "src/Note/domain/Snapshot/NotaSnapshot";
 import { TipoParteCuerpo } from "../value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { ParteCuerpo } from "../value_objects/Cuerpo_VO/ParteCuerpo";
 import { FabricaCuerpo } from "./FabricaCuerpo";
 import { ConstructorImagenCuerpo } from "./Constructores_ParteCuerpo/ConstructorImagenCuerpo";
 import { TextoPlanoCuerpo } from '../value_objects/Cuerpo_VO/TextoPlanoCuerpo';
 import { ConstructorTextoPlanoCuerpo } from "./Constructores_ParteCuerpo/ConstructorTextoPlanoCuerpo";
+import { ParteCuerpoSnapshot } from "../Snapshot/ParteCuerpoSnapshot";
 
 export class FabricaNota {
-    static fabricar(id:string, titulo:string, cuerpo:Array<{tipo:TipoParteCuerpo}>, fechaCreacion:Date, fechaEliminacion:Optional<Date>, fechaActualizacion:Date,
+    static fabricar(id:string, titulo:string, cuerpo:Array<ParteCuerpoSnapshot>, fechaCreacion:Date, fechaEliminacion:Optional<Date>, fechaActualizacion:Date,
                      latitud:Optional<number>, altitud:Optional<number>, usuarioId:string):Nota{
 
         const i:IdNota = new IdNota(id);
@@ -48,13 +49,15 @@ export class FabricaNota {
         return new TituloNota(titulo);
     }
 
-    static fabricarCuerpo(cuerpo:Array<{tipo:TipoParteCuerpo}>):CuerpoNota{
+    static fabricarCuerpo(cuerpo:Array<ParteCuerpoSnapshot>):CuerpoNota{
         let nuevocuerpo:Array<ParteCuerpo> = new Array<ParteCuerpo>();
         let fabrica:FabricaCuerpo = new FabricaCuerpo();
         fabrica.addConstructor(TipoParteCuerpo.Imagen,new ConstructorImagenCuerpo());
         fabrica.addConstructor(TipoParteCuerpo.textoPlano,new ConstructorTextoPlanoCuerpo());
-
+        
         for (const parte of cuerpo){
+            
+            console.log("fabricarCuerpo, parte instance=",(parte as ParteCuerpoSnapshot) instanceof ParteCuerpoSnapshot); 
             let p:ParteCuerpo = fabrica.fabricar(parte);
             nuevocuerpo.push(p);
         }

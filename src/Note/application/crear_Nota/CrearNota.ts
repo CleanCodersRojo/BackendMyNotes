@@ -4,7 +4,7 @@ import { CrearNotaComando } from "./CrearNotaComando";
 import { IGeneradorUUID } from '../../../Shared/application/Shared_Commands/IGeneradorUUID';
 import { Nota } from "src/Note/domain/Nota";
 import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
-import { NotaSnapshot} from "../../domain/NotaSnapshot";
+import { NotaSnapshot} from "../../domain/Snapshot/NotaSnapshot";
 import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
 
 export class CrearNota implements IServicio<NotaSnapshot>{

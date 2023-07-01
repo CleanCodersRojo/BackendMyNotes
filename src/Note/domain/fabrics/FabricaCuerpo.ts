@@ -1,3 +1,4 @@
+import { ParteCuerpoSnapshot } from "../Snapshot/ParteCuerpoSnapshot";
 import { ParteCuerpo } from "../value_objects/Cuerpo_VO/ParteCuerpo";
 import { TipoParteCuerpo } from "../value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { ConstructorParteCuerpo } from "./ConstructorParteCuerpo";
@@ -13,9 +14,9 @@ export class FabricaCuerpo {
         this.constructores.set(t,c);
     }
 
-    public fabricar(parte:{tipo:TipoParteCuerpo}):ParteCuerpo{
+    public fabricar(parte:ParteCuerpoSnapshot):ParteCuerpo{
         for (let key of this.constructores.keys()) {
-            if (parte.tipo == key){
+            if (ParteCuerpoSnapshot.transformarATipo(parte.tipo) == key){
                 return this.constructores.get(key).fabricar(parte);
             }
         }

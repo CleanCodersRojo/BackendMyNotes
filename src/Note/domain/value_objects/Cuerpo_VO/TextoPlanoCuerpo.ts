@@ -2,6 +2,8 @@ import { IValueObject } from "src/Shared/domain/IValueObject";
 import { TipoParteCuerpo } from "./TipoParteCuerpo";
 import { ParteCuerpo } from "./ParteCuerpo";
 import { EnumAlineacionTexto } from "./EnumAlineacionTexto";
+import { TextoPlanoSnapshot } from "../../Snapshot/TextoPlanoSnapshot";
+import { ConstructorTextoPlanoCuerpo } from "../../fabrics/Constructores_ParteCuerpo/ConstructorTextoPlanoCuerpo";
 
 export class TextoPlanoCuerpo extends ParteCuerpo{
     
@@ -25,15 +27,8 @@ export class TextoPlanoCuerpo extends ParteCuerpo{
             return false;
     }
 
-    public getParte(): { tipo: TipoParteCuerpo, texto:string, size:number, color:number, alineacion:EnumAlineacionTexto } {
-        let parte = {
-            tipo:this.tipo,
-            texto:this.texto,
-            size:this.size,
-            color:this.color,
-            alineacion:this.alineacion
-        };
-
-        return parte;
+    public getParteSnapshot(): TextoPlanoSnapshot {
+        const constructor:ConstructorTextoPlanoCuerpo = new ConstructorTextoPlanoCuerpo();
+        return constructor.newSnapshot(this.texto,this.size,this.color,this.alineacion);
     }
 }

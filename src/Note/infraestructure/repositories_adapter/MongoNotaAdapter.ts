@@ -4,14 +4,14 @@ import {NotaSchema, notaModel} from 'src/Note/infraestructure/schemas/nota.schem
 import { Either } from 'src/Shared/utilities/Either';
 import { Optional } from 'src/Shared/utilities/Optional';
 import { RepositorioNota } from 'src/Note/domain/repositories/RepositorioNota';
-import { NotaSnapshot } from 'src/Note/domain/NotaSnapshot';
+import { NotaSnapshot } from 'src/Note/domain/Snapshot/NotaSnapshot';
 import { IdNota } from 'src/Note/domain/value_objects/IdNota';
 import { InjectModel, Schema } from '@nestjs/mongoose';
 import { FabricaNota } from 'src/Note/domain/fabrics/FabricaNota';
 import { UbicacionNota } from '../../domain/value_objects/UbicacionNota';
 import { ConvertidorNota } from './ConvertidorNota';
 import { IdUser } from 'src/User/domain/value_objects/IdUser';
-import { TipoParteCuerpo } from 'src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo';
+import { ParteCuerpoSnapshot } from 'src/Note/domain/Snapshot/ParteCuerpoSnapshot';
 
 @Injectable()
 export class MongoNotaAdapter implements RepositorioNota{
@@ -25,9 +25,9 @@ export class MongoNotaAdapter implements RepositorioNota{
             for (const notajson of data){
                 const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notajson);
                 const nota:Nota = FabricaNota.restaurarNota(snapshot);
-                Notas.push(nota);   
+                Notas.push(nota);
             }
-            console.log(Notas);
+            
 
             return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(Notas)));
         } catch (e) {
@@ -73,7 +73,7 @@ export class MongoNotaAdapter implements RepositorioNota{
     async modificarNota(nota:Nota): Promise<Either<Optional<Nota>, Error>> {
         const snapshot:NotaSnapshot = nota.getSnapshot(); 
         const titulo:string = snapshot.titulo;
-        const cuerpo:Array<{tipo:TipoParteCuerpo}> = snapshot.cuerpo;
+        const cuerpo:Array<ParteCuerpoSnapshot> = snapshot.cuerpo;
         const fechaEliminacion:Optional<Date> = snapshot.fechaEliminacion;
         const fechaActualizacion:Date = snapshot.fechaActualizacion;
         const latitud:Optional<number> = snapshot.latitud;

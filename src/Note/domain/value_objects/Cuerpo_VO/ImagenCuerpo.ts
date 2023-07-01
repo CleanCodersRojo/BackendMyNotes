@@ -2,6 +2,8 @@ import { IValueObject } from "src/Shared/domain/IValueObject";
 import { TipoParteCuerpo } from "./TipoParteCuerpo";
 import { ParteCuerpo } from "./ParteCuerpo";
 import { EnumAlineacionTexto } from "./EnumAlineacionTexto";
+import { ImagenSnapshot } from "../../Snapshot/ImagenSnapshot";
+import { ConstructorImagenCuerpo } from "../../fabrics/Constructores_ParteCuerpo/ConstructorImagenCuerpo";
 
 export class ImagenCuerpo extends ParteCuerpo{
     
@@ -19,11 +21,8 @@ export class ImagenCuerpo extends ParteCuerpo{
             return false;
     }
 
-    public getParte(): {tipo:TipoParteCuerpo, bytes:string} {
-        let parte = {
-            tipo: this.tipo,
-            bytes:this.bytes
-        };
-        return parte;
+    public getParteSnapshot(): ImagenSnapshot {
+        const constructor:ConstructorImagenCuerpo = new ConstructorImagenCuerpo();
+        return constructor.newSnapshot(this.bytes);
     }
 }

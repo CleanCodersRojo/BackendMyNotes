@@ -1,5 +1,6 @@
 import { IValueObject } from "src/Shared/domain/IValueObject";
 import { TipoParteCuerpo } from "./TipoParteCuerpo";
+import { ParteCuerpoSnapshot } from "../../Snapshot/ParteCuerpoSnapshot";
 
 export abstract class ParteCuerpo implements IValueObject{
 
@@ -10,5 +11,5 @@ export abstract class ParteCuerpo implements IValueObject{
     }
 
     abstract equals(other: ParteCuerpo): boolean;
-    abstract getParte(): {tipo:TipoParteCuerpo} ;
+    abstract getParteSnapshot(): ParteCuerpoSnapshot ;
 }

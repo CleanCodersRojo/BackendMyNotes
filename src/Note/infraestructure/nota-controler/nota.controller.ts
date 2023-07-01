@@ -8,7 +8,7 @@ import { CrearNota } from 'src/Note/application/crear_Nota/CrearNota';
 import { GeneradorUUID } from '../UUID/GeneradorUUID';
 import { Either } from 'src/Shared/utilities/Either';
 import { Optional } from 'src/Shared/utilities/Optional';
-import { NotaSnapshot } from 'src/Note/domain/NotaSnapshot';
+import { NotaSnapshot } from 'src/Note/domain/Snapshot/NotaSnapshot';
 import { EliminarNota } from 'src/Note/application/eliminar_Nota/EliminarNota';
 import { EliminarNotaDTO } from './EliminarNotaDTO';
 import { EliminarNotaComando } from '../../application/eliminar_Nota/EliminarNotaComando';
@@ -18,7 +18,8 @@ import { ModificarNotaDTO } from './ModificarNotaDTO';
 import { ModificarNota } from 'src/Note/application/modificar_Nota/ModificarNota';
 import { ModificarNotaComando } from 'src/Note/application/modificar_Nota/ModificarNotaComando';
 import { IdUser } from 'src/User/domain/value_objects/IdUser';
-import { TipoParteCuerpo } from 'src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo';
+import { Nota } from 'src/Note/domain/Nota';
+import { ParteCuerpoSnapshot } from 'src/Note/domain/Snapshot/ParteCuerpoSnapshot';
 
 @Controller('nota')
 export class NotaController {
@@ -38,12 +39,38 @@ export class NotaController {
 
     @Get(':id')
     async getNoteById(@Param('id') id){
-        return await this.adapter.buscarNotaPorId(new IdNota(id));
+        const nota:Either<Optional<Nota>, Error> = await this.adapter.buscarNotaPorId(new IdNota(id));
+        if (nota.isLeft()){
+            if (nota.getLeft().HasValue())
+                return Either.makeLeft<Optional<NotaSnapshot>, Error>(new Optional<NotaSnapshot>(nota.getLeft().getValue().getSnapshot()));
+            else
+                return Either.makeLeft<Optional<NotaSnapshot>, Error>(new Optional<NotaSnapshot>());
+        }
+        else {
+            return Either.makeRight<Optional<NotaSnapshot>, Error>(nota.getRight());
+        }
+        
     }
 
     @Get('/byUser/:id')
     async getNotesByUser(@Param('id') id){
-        return await this.adapter.buscarNotasPorUsuario(new IdUser(id));
+        const notas:Either<Optional<Nota[]>, Error> = await this.adapter.buscarNotasPorUsuario(new IdUser(id));
+        
+        if (notas.isLeft()){
+            if (notas.getLeft().HasValue()){
+                let snapshots:NotaSnapshot[] = [];
+                for (const nota of notas.getLeft().getValue()){
+                    snapshots.push(nota.getSnapshot());
+                }
+                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>(snapshots));
+            }
+            else{
+                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>());
+            }
+        }
+        else{
+            return Either.makeRight<Optional<NotaSnapshot[]>, Error>(notas.getRight());
+        }
     }
 
     @Post()
@@ -62,10 +89,9 @@ export class NotaController {
 
         const cmd:CrearNotaComando = new CrearNotaComando(nuevaNota.titulo, nuevaNota.cuerpo, nuevaNota.fechaCreacion, fechaeliminada,
                                                             nuevaNota.fechaActualizacion, latitud, altitud, nuevaNota.usuarioId);
-        console.log("CMD",cmd);
-        console.log("TIPO",TipoParteCuerpo.Imagen);
+        console.log("CrearNotaComando",cmd);                              
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
-
+        console.log("RESULTDADO",result);    
         return result;
     }
 
@@ -83,7 +109,7 @@ export class NotaController {
     async modificarNota(@Body() nota:ModificarNotaDTO){
         const fechaeliminada:Optional<Date> = new Optional<Date>(nota.fechaEliminacion);
         const titulo:Optional<string> = new Optional<string>(nota.titulo);
-        const cuerpo:Optional<Array<{tipo:TipoParteCuerpo}>> = new Optional<Array<{tipo:TipoParteCuerpo}>>(nota.cuerpo);
+        const cuerpo:Optional<Array<ParteCuerpoSnapshot>> = new Optional<Array<ParteCuerpoSnapshot>>(nota.cuerpo);
         const latitud:Optional<number> = new Optional<number>(nota.latitud);
         const altitud:Optional<number> = new Optional<number>(nota.altitud);
 

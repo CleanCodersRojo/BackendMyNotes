@@ -5,7 +5,7 @@ import {TituloNota} from "src/Note/domain/value_objects/TituloNota";
 import {FechaNota} from "src/Note/domain/value_objects/FechaNota";
 import { IdUser } from "src/User/domain/value_objects/IdUser";
 import { UbicacionNota } from './value_objects/UbicacionNota';
-import { NotaSnapshot } from "./NotaSnapshot";
+import { NotaSnapshot } from "./Snapshot/NotaSnapshot";
 
 export class Nota {
     private notaId:IdNota;

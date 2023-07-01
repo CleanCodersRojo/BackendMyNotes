@@ -3,7 +3,7 @@ import { IServicio } from "../../../Shared/application/Shared_Commands/IServicio
 import { EliminarNotaComando } from "./EliminarNotaComando";
 import { Nota } from "src/Note/domain/Nota";
 import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
-import { NotaSnapshot} from "../../domain/NotaSnapshot";
+import { NotaSnapshot} from "../../domain/Snapshot/NotaSnapshot";
 import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
 import { Optional } from "src/Shared/utilities/Optional";
 import { IdNota } from "src/Note/domain/value_objects/IdNota";

@@ -2,7 +2,6 @@ import { Optional } from 'src/Shared/utilities/Optional';
 import { Either } from 'src/Shared/utilities/Either';
 import { IdNota } from '../value_objects/IdNota';
 import { Nota } from '../Nota';
-import { NotaSnapshot } from '../NotaSnapshot';
 import { IdUser } from 'src/User/domain/value_objects/IdUser';
 
 export interface RepositorioNota {

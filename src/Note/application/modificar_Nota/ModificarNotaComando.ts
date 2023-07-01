@@ -2,18 +2,19 @@ import { Optional } from "src/Shared/utilities/Optional";
 import { TipoComando } from "../../../Shared/application/Shared_Commands/TipoComandoNotas";
 import { ICommand } from "../../../Shared/application/Shared_Commands/ICommand";
 import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
+import { ParteCuerpoSnapshot } from "src/Note/domain/Snapshot/ParteCuerpoSnapshot";
 
 export class ModificarNotaComando extends ICommand{
     id:string;
     fechaActualizacion:Date;
     titulo:Optional<string>;
-    cuerpo:Optional<Array<{tipo:TipoParteCuerpo}>>;
+    cuerpo:Optional<Array<ParteCuerpoSnapshot>>;
     fechaEliminacion:Optional<Date>;
     latitud:Optional<number>;
     altitud:Optional<number>;
     usuarioId:string;
 
-    constructor(id:string, fa:Date, t:Optional<string>, c:Optional<Array<{tipo:TipoParteCuerpo}>>, fe:Optional<Date>, l:Optional<number>, a:Optional<number>, 
+    constructor(id:string, fa:Date, t:Optional<string>, c:Optional<Array<ParteCuerpoSnapshot>>, fe:Optional<Date>, l:Optional<number>, a:Optional<number>, 
         user:string){
         super();
         super.tipoComando = TipoComando.ModificarNota;
