@@ -12,6 +12,7 @@ import { UbicacionNota } from '../../domain/value_objects/UbicacionNota';
 import { ConvertidorNota } from './ConvertidorNota';
 import { IdUser } from 'src/User/domain/value_objects/IdUser';
 import { ParteCuerpoSnapshot } from 'src/Note/domain/Snapshot/ParteCuerpoSnapshot';
+import { FabricaRestaurarNota } from 'src/Note/domain/fabrics/FabricaRestaurarNota';
 
 @Injectable()
 export class MongoNotaAdapter implements RepositorioNota{
@@ -21,14 +22,12 @@ export class MongoNotaAdapter implements RepositorioNota{
         try {
             const data = await this.notamodel.find({usuarioId:id.getId()})
             const Notas: Nota[]= [];
-
+            
             for (const notajson of data){
                 const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notajson);
-                const nota:Nota = FabricaNota.restaurarNota(snapshot);
+                const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot);
                 Notas.push(nota);
             }
-            
-
             return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(Notas)));
         } catch (e) {
             return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(e))
@@ -40,7 +39,7 @@ export class MongoNotaAdapter implements RepositorioNota{
             const notaBuscada = await this.notamodel.findOne({notaId: id.getId()});
 
             const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notaBuscada);
-            const nota:Nota = FabricaNota.restaurarNota(snapshot);
+            const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot);
 
             return Promise.resolve(Either.makeLeft<Optional<Nota>, Error>(new Optional<Nota>(nota)));
         } catch (e) {
@@ -51,6 +50,8 @@ export class MongoNotaAdapter implements RepositorioNota{
     //GuardarNota en la Base de Datos
     async guardarNota(nota:Nota): Promise<Either<Nota, Error>> {
         console.log('CreateNotaDTO', nota);
+        console.log("=========================");
+        console.log('nota', nota.getSnapshot().cuerpo);
 
         const snapshot:NotaSnapshot = nota.getSnapshot();
         try {

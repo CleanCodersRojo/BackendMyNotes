@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CrearNotaComando } from 'src/Note/application/crear_Nota/CrearNotaComando';
-import { CrearNotaDTO } from './CrearNotaDTO';
+import { CrearNotaDTO } from './DTOs/CrearNotaDTO';
 import { CommandHandler } from '../../../Shared/application/Shared_Commands/CommandHandler';
 import { TipoComando } from 'src/Shared/application/Shared_Commands/TipoComandoNotas';
 import { IServicio } from 'src/Shared/application/Shared_Commands/IServicio';
@@ -10,16 +10,21 @@ import { Either } from 'src/Shared/utilities/Either';
 import { Optional } from 'src/Shared/utilities/Optional';
 import { NotaSnapshot } from 'src/Note/domain/Snapshot/NotaSnapshot';
 import { EliminarNota } from 'src/Note/application/eliminar_Nota/EliminarNota';
-import { EliminarNotaDTO } from './EliminarNotaDTO';
+import { EliminarNotaDTO } from './DTOs/EliminarNotaDTO';
 import { EliminarNotaComando } from '../../application/eliminar_Nota/EliminarNotaComando';
 import { IdNota } from 'src/Note/domain/value_objects/IdNota';
 import { MongoNotaAdapter } from '../repositories_adapter/MongoNotaAdapter';
-import { ModificarNotaDTO } from './ModificarNotaDTO';
+import { ModificarNotaDTO } from './DTOs/ModificarNotaDTO';
 import { ModificarNota } from 'src/Note/application/modificar_Nota/ModificarNota';
 import { ModificarNotaComando } from 'src/Note/application/modificar_Nota/ModificarNotaComando';
 import { IdUser } from 'src/User/domain/value_objects/IdUser';
 import { Nota } from 'src/Note/domain/Nota';
 import { ParteCuerpoSnapshot } from 'src/Note/domain/Snapshot/ParteCuerpoSnapshot';
+import { ReceptorParteCuerpo } from 'src/Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo';
+import { ImagenCuerpoDTO, ParteCuerpoDTO, TextoCuerpoDTO } from './DTOs/ParteCuerpoDTO';
+import { TipoParteCuerpo } from 'src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo';
+import { ReceptorTextoCuerpo } from 'src/Note/domain/fabrics/FabricaTexto/ReceptorTextoCuerpo';
+import { ReceptorImagenCuerpo } from 'src/Note/domain/fabrics/FabricaImagen/ReceptorImagenCuerpo';
 
 @Controller('nota')
 export class NotaController {
@@ -55,7 +60,7 @@ export class NotaController {
     @Get('/byUser/:id')
     async getNotesByUser(@Param('id') id){
         const notas:Either<Optional<Nota[]>, Error> = await this.adapter.buscarNotasPorUsuario(new IdUser(id));
-        
+
         if (notas.isLeft()){
             if (notas.getLeft().HasValue()){
                 let snapshots:NotaSnapshot[] = [];
@@ -87,9 +92,13 @@ export class NotaController {
             return Either.makeRight<NotaSnapshot,Error>(new Error());
         }
 
+        let cuerpoCmd:Array<ReceptorParteCuerpo> = new Array<ReceptorParteCuerpo>();
+
+
+
         const cmd:CrearNotaComando = new CrearNotaComando(nuevaNota.titulo, nuevaNota.cuerpo, nuevaNota.fechaCreacion, fechaeliminada,
                                                             nuevaNota.fechaActualizacion, latitud, altitud, nuevaNota.usuarioId);
-        console.log("CrearNotaComando",cmd);                              
+                                                                                        
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
         console.log("RESULTDADO",result);    
         return result;
@@ -109,7 +118,7 @@ export class NotaController {
     async modificarNota(@Body() nota:ModificarNotaDTO){
         const fechaeliminada:Optional<Date> = new Optional<Date>(nota.fechaEliminacion);
         const titulo:Optional<string> = new Optional<string>(nota.titulo);
-        const cuerpo:Optional<Array<ParteCuerpoSnapshot>> = new Optional<Array<ParteCuerpoSnapshot>>(nota.cuerpo);
+        const cuerpo:Optional<Array<ParteCuerpoDTO>> = new Optional<Array<ParteCuerpoDTO>>(nota.cuerpo);
         const latitud:Optional<number> = new Optional<number>(nota.latitud);
         const altitud:Optional<number> = new Optional<number>(nota.altitud);
 
@@ -120,7 +129,9 @@ export class NotaController {
             return Either.makeRight<NotaSnapshot,Error>(new Error());
         }
 
-        const cmd:ModificarNotaComando = new ModificarNotaComando(nota.id,nota.fechaActualizacion,titulo, cuerpo, fechaeliminada, 
+        const cmd:ModificarNotaComando = new ModificarNotaComando(nota.id,nota.fechaActualizacion,titulo, 
+                                                                    cuerpo, 
+                                                                    fechaeliminada, 
                                                                     latitud, altitud, nota.usuarioId);
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
 

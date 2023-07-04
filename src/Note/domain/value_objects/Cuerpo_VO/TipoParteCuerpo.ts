@@ -1,4 +1,4 @@
 export enum TipoParteCuerpo{
-    textoPlano, textoCursiva, textoEnNegrita, textoSubrayado, Imagen, NotaDeVoz, Tarea
+    textoPlano = "Texto Plano", Imagen = "Imagen", Tarea = "Tarea"
 
 }

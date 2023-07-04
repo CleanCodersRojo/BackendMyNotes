@@ -5,15 +5,15 @@ import { ParteCuerpoSnapshot } from "./ParteCuerpoSnapshot";
 
 export class TextoPlanoSnapshot extends ParteCuerpoSnapshot{
     texto:string;
-    size:number;
+    /*size:number;
     color:number;
-    alineacion:EnumAlineacionTexto; 
+    alineacion:EnumAlineacionTexto; */
 
-    constructor(tipo:TipoParteCuerpo, texto:string, size:number, color:number, alineacion:number){
-        super(tipo);
+    constructor(texto:string/*, size:number, color:number, alineacion:number*/){
+        super(TipoParteCuerpo.textoPlano);
         this.texto = texto;
-        this.size = size;
+        /*this.size = size;
         this.color = color;
-        this.alineacion = alineacion;
+        this.alineacion = alineacion;*/
     }
 }

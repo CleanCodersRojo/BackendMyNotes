@@ -10,7 +10,7 @@ import { NotaSnapshot } from "./Snapshot/NotaSnapshot";
 export class Nota {
     private notaId:IdNota;
     private titulo:TituloNota;
-    private cuerpo:CuerpoNota;
+    public cuerpo:CuerpoNota;
     private fechaCreacion:FechaNota;
     private fechaEliminacion:Optional<FechaNota>;
     private fechaActualizacion:FechaNota;

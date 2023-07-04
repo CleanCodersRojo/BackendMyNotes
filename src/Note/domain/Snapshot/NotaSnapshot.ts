@@ -52,6 +52,7 @@ export class NotaSnapshot{
             la = new Optional<number>();
             al = new Optional<number>();
         }
+
         return new NotaSnapshot(id.getId(),titulo.getTitulo(),cuerpo.getCuerpo(), fechaCreacion.getFecha(), fe, 
                                 fechaActualizacion.getFecha(), la, al, usuarioId.getId());
     }

@@ -3,7 +3,7 @@ import { TipoParteCuerpo } from "./TipoParteCuerpo";
 import { ParteCuerpo } from "./ParteCuerpo";
 import { EnumAlineacionTexto } from "./EnumAlineacionTexto";
 import { ImagenSnapshot } from "../../Snapshot/ImagenSnapshot";
-import { ConstructorImagenCuerpo } from "../../fabrics/Constructores_ParteCuerpo/ConstructorImagenCuerpo";
+import { ConstructorImagenCuerpo } from "../../fabrics/FabricaImagen/ConstructorImagenCuerpo";
 
 export class ImagenCuerpo extends ParteCuerpo{
     

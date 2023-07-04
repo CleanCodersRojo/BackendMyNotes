@@ -4,16 +4,21 @@ import { ImagenCuerpo } from "../../value_objects/Cuerpo_VO/ImagenCuerpo";
 import { ParteCuerpo } from "../../value_objects/Cuerpo_VO/ParteCuerpo";
 import { TextoPlanoCuerpo } from "../../value_objects/Cuerpo_VO/TextoPlanoCuerpo";
 import { TipoParteCuerpo } from "../../value_objects/Cuerpo_VO/TipoParteCuerpo";
-import { ConstructorParteCuerpo } from "../ConstructorParteCuerpo";
+import { ReceptorImagenCuerpo } from "./ReceptorImagenCuerpo";
+import { ConstructorParteCuerpo } from "../Shared_ParteCuerpo/ConstructorParteCuerpo";
 
 export class ConstructorImagenCuerpo implements ConstructorParteCuerpo{
     
-    fabricar(parte:ImagenSnapshot):ParteCuerpo{
+    fabricar(parte:ReceptorImagenCuerpo):ParteCuerpo{
         return new ImagenCuerpo(parte.bytes);
     }
 
+    restaurar(parte:ImagenSnapshot):ParteCuerpo{
+        return new ImagenCuerpo(parte.bytes/*, parte.size, parte.color, parte.alineacion*/);
+    }
+
     public newSnapshot(bytes:string):ImagenSnapshot{
-        return new ImagenSnapshot(TipoParteCuerpo.Imagen, bytes);
+        return new ImagenSnapshot(bytes);
     }
 
 }
