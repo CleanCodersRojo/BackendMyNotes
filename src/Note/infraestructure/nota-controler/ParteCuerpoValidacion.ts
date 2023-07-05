@@ -1,13 +1,22 @@
 import { ReceptorParteCuerpo } from "src/Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo";
 import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { Optional } from "src/Shared/utilities/Optional";
+import { ValidacionCuerpo } from "./Personalized_Validations/ValidacionCuerpo";
+import { ParteCuerpoDTO } from "./DTOs/ParteCuerpoDTO";
 
 export class ParteCuerpoValidacion {
-    public cuerpoValidacion(cuerpo: Array<ReceptorParteCuerpo>):boolean{
+    public cuerpoValidacion(cuerpo: Array<ParteCuerpoDTO>):boolean{
+        const validador:ValidacionCuerpo = new ValidacionCuerpo();
+
         for(const parte of cuerpo){
             const tipo:Optional<string> = new Optional<string>(<string>parte.tipo);
             if(tipo.HasValue() && this.tipoValidacion(tipo.getValue())){
-                
+                if (!validador.esValido(parte)){
+                    return false;
+                }
+            }
+            else{
+                return false;
             }
         }
         

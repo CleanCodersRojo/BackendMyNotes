@@ -17,7 +17,7 @@ export class ConstructorImagenCuerpo implements ConstructorParteCuerpo{
         return new ImagenCuerpo(parte.bytes/*, parte.size, parte.color, parte.alineacion*/);
     }
 
-    public newSnapshot(bytes:string):ImagenSnapshot{
+    public newSnapshot(bytes:Uint8Array):ImagenSnapshot{
         return new ImagenSnapshot(bytes);
     }
 

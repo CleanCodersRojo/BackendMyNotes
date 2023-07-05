@@ -4,9 +4,9 @@ import { ParteCuerpoSnapshot } from "./ParteCuerpoSnapshot";
 
 
 export class ImagenSnapshot extends ParteCuerpoSnapshot{
-    bytes:string;
+    bytes:Uint8Array;
 
-    constructor(bytes:string){
+    constructor(bytes:Uint8Array){
         super(TipoParteCuerpo.Imagen);
         this.bytes = bytes;
     }

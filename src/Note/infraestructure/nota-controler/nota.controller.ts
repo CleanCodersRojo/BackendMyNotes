@@ -25,6 +25,7 @@ import { ImagenCuerpoDTO, ParteCuerpoDTO, TextoCuerpoDTO } from './DTOs/ParteCue
 import { TipoParteCuerpo } from 'src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo';
 import { ReceptorTextoCuerpo } from 'src/Note/domain/fabrics/FabricaTexto/ReceptorTextoCuerpo';
 import { ReceptorImagenCuerpo } from 'src/Note/domain/fabrics/FabricaImagen/ReceptorImagenCuerpo';
+import { ParteCuerpoValidacion } from './ParteCuerpoValidacion';
 
 @Controller('nota')
 export class NotaController {
@@ -81,6 +82,11 @@ export class NotaController {
     @Post()
     @UsePipes(ValidationPipe)
     async crearNota(@Body() nuevaNota:CrearNotaDTO){
+        const validacion:ParteCuerpoValidacion = new ParteCuerpoValidacion();
+        if (!validacion.cuerpoValidacion(nuevaNota.cuerpo)){
+            return new Error();
+        }
+        
         const fechaeliminada:Optional<Date> = new Optional<Date>(nuevaNota.fechaEliminacion);
         const latitud:Optional<number> = new Optional<number>(nuevaNota.latitud);
         const altitud:Optional<number> = new Optional<number>(nuevaNota.altitud);
@@ -104,6 +110,15 @@ export class NotaController {
         return result;
     }
 
+    @Post('/testValidation')
+    @UsePipes(ValidationPipe)
+    async testValidation(@Body() nuevaNota:CrearNotaDTO){
+        const validacion:ParteCuerpoValidacion = new ParteCuerpoValidacion()
+        console.log(nuevaNota.cuerpo);
+        console.log("=============================================");
+        console.log(validacion.cuerpoValidacion(nuevaNota.cuerpo));
+    }
+
     @Delete()
     @UsePipes(ValidationPipe)
     async eliminarNota(@Body() nota:EliminarNotaDTO){
@@ -121,6 +136,11 @@ export class NotaController {
         const cuerpo:Optional<Array<ParteCuerpoDTO>> = new Optional<Array<ParteCuerpoDTO>>(nota.cuerpo);
         const latitud:Optional<number> = new Optional<number>(nota.latitud);
         const altitud:Optional<number> = new Optional<number>(nota.altitud);
+
+        const validacion:ParteCuerpoValidacion = new ParteCuerpoValidacion();
+        if (cuerpo.HasValue() && (!validacion.cuerpoValidacion(nota.cuerpo))){
+            return new Error();
+        }
 
         //Validar que un valor de ubicacion si se tiene pero el otro no
         if (!latitud.HasValue() && altitud.HasValue()){

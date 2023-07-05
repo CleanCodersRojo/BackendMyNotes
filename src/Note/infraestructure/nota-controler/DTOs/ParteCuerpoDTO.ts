@@ -1,19 +1,19 @@
-import { IsNumber, IsString, Validate } from "class-validator";
-import { BodyPartType } from "../Personalized_Validations/CuerpoValidation";
+import { IsArray, IsNumber, IsString, Validate } from "class-validator";
+import { isUint8Array } from "util/types";
 
 export class ParteCuerpoDTO{
-    @IsString() //@Validate(BodyPartType)
+    @IsString()
     tipo:string;  
 }
 
 
 export class TextoCuerpoDTO extends ParteCuerpoDTO{
-    @IsString() //@Validate(BodyPartType)
+    @IsString()
     texto:string;
     size:number;  
 }
 
 export class ImagenCuerpoDTO extends ParteCuerpoDTO{
-    @IsString() //@Validate(BodyPartType)
-    bytes:string;
+    @IsArray() //@Validate(BodyPartType)
+    bytes:Uint8Array;
 }

@@ -7,9 +7,9 @@ import { ConstructorImagenCuerpo } from "../../fabrics/FabricaImagen/Constructor
 
 export class ImagenCuerpo extends ParteCuerpo{
     
-    private bytes:string; //Verificar que tenga los valores de un byte
+    private bytes:Uint8Array; //Verificar que tenga los valores de un byte
 
-    constructor(bytes:string){
+    constructor(bytes:Uint8Array){
         super(TipoParteCuerpo.Imagen);
         this.bytes = bytes;
     }

@@ -4,7 +4,7 @@ export class TituloNota implements IValueObject{
     private titulo:string = "";
 
     constructor(s:string){
-        this.titulo = s;
+        this.titulo = s.substring(0, 50);
     }
 
     public equals(other: TituloNota): boolean{

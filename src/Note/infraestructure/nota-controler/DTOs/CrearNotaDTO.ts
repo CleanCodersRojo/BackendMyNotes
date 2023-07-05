@@ -3,7 +3,6 @@ import { ParteCuerpoSnapshot } from "src/Note/domain/Snapshot/ParteCuerpoSnapsho
 import { ReceptorParteCuerpo } from "src/Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo";
 import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { ParteCuerpoDTO } from "./ParteCuerpoDTO";
-import { BodyPartType } from "../Personalized_Validations/CuerpoValidation";
 import { Type } from "class-transformer";
 
 
