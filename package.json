@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^9.4.3",
-    "@nestjs/core": "^9.0.0",
+    "@nestjs/core": "^9.4.3",
     "@nestjs/mongoose": "^9.2.2",
     "@nestjs/platform-express": "^9.0.0",
     "class-transformer": "^0.5.1",
@@ -29,6 +29,7 @@
     "mongodb": "^5.6.0",
     "mongoose": "^7.2.4",
     "mongoosen": "^1.0.4",
+    "multer": "^1.4.5-lts.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "uuid": "^9.0.0"
@@ -36,9 +37,10 @@
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
-    "@nestjs/testing": "^9.0.0",
+    "@nestjs/testing": "^9.4.3",
     "@types/express": "^4.17.13",
     "@types/jest": "29.5.1",
+    "@types/mocha": "^10.0.1",
     "@types/node": "18.16.12",
     "@types/supertest": "^2.0.11",
     "@types/uuid": "^9.0.2",

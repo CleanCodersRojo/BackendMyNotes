@@ -1,4 +1,4 @@
-import { InjectModel } from "@nestjs/mongoose";
+/* import { InjectModel } from "@nestjs/mongoose";
 import { User } from "src/User/domain/User";
 import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
 import { MementoUser } from "src/User/domain/mementoUser";
@@ -19,9 +19,10 @@ export class MongoUserRepository implements UserRepository{
             const data = await this.usermodel.find({email:email,pass:pass})
 
             for (const userjson of data){
-                let user:User = FabricaUser.fabricar(userjson.userId, userjson.name,userjson.email,userjson.bornDate,userjson.pass);
+                let  user:User = FabricaUser.fabricar(userjson.userId, userjson.name,userjson.email,userjson.bornDate,userjson.pass);
                 const vistaUser:MementoUser = user.guardar();
             }
+           
             return Promise.resolve(Either.makeLeft<Optional<MementoUser>,Error>(new Optional<MementoUser>(vistaUser)));
         } catch (e) {
             return Promise.resolve(Either.makeRight<Optional<MementoUser>, Error>(e))
@@ -43,4 +44,4 @@ export class MongoUserRepository implements UserRepository{
     }
 
     
-}
+} */

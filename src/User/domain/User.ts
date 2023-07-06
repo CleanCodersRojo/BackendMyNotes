@@ -1,4 +1,4 @@
-import { MementoUser } from "./mementoUser";
+import { MementoUser } from "./SnapShot/mementoUser";
 import { IdUser } from "./value_objects/IdUser";
 import { UserBornDate } from "./value_objects/UserBornDate";
 import { UserEmail } from "./value_objects/UserEmail";

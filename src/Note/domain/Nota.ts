@@ -1,25 +1,25 @@
-import { Optional } from "src/core/ortogonal_solutions/Optional";
+import { Optional } from "src/Shared/utilities/Optional";
 import {IdNota} from "src/Note/domain/value_objects/IdNota";
 import {CuerpoNota} from "src/Note/domain/value_objects/CuerpoNota";
 import {TituloNota} from "src/Note/domain/value_objects/TituloNota";
 import {FechaNota} from "src/Note/domain/value_objects/FechaNota";
 import { IdUser } from "src/User/domain/value_objects/IdUser";
 import { UbicacionNota } from './value_objects/UbicacionNota';
-import { MementoNota } from "./MementoNota";
+import { NotaSnapshot } from "./Snapshot/NotaSnapshot";
 
 export class Nota {
     private notaId:IdNota;
     private titulo:TituloNota;
-    private cuerpo:CuerpoNota;
+    public cuerpo:CuerpoNota;
     private fechaCreacion:FechaNota;
     private fechaEliminacion:Optional<FechaNota>;
     private fechaActualizacion:FechaNota;
-    private ubicacion:UbicacionNota;
+    private ubicacion:Optional<UbicacionNota>;
     private usuario:IdUser;
 
 
     constructor(id:IdNota, t:TituloNota, c:CuerpoNota, fechaCreacion:FechaNota, fechaEliminacion:Optional<FechaNota>, 
-                fechaActualizacion:FechaNota, ubicacion:UbicacionNota, user:IdUser){
+                fechaActualizacion:FechaNota, ubicacion:Optional<UbicacionNota>, user:IdUser){
         this.notaId = id;
         this.titulo = t;
         this.cuerpo = c;
@@ -28,10 +28,6 @@ export class Nota {
         this.fechaActualizacion = fechaActualizacion;
         this.ubicacion = ubicacion;
         this.usuario = user;
-    }
-
-    public eliminar(fecha:FechaNota){
-        this.fechaEliminacion = new Optional<FechaNota>(fecha);
     }
 
     public setTitulo(t: TituloNota):void{
@@ -44,9 +40,37 @@ export class Nota {
         //tirar evento de cuerpo actualizado
     }
 
-    public guardar():MementoNota{
-        return new MementoNota(this.notaId, this.titulo, this.cuerpo,this.fechaCreacion, this.fechaEliminacion , this.fechaActualizacion,
-                                this.ubicacion, this.usuario);
+    public setActualizacion(fecha:FechaNota):void{
+        this.fechaActualizacion = fecha;
     }
 
+    public localizar(ubi:UbicacionNota):void{
+        if (!this.ubicacion.HasValue()){
+            this.ubicacion = new Optional<UbicacionNota>(ubi);
+        }
+        else{//No se le puede cambiar la ubicaicon a una nota con ubicacion
+            throw new Error();
+        }
+    }
+
+    public deslocalizar():void{
+        this.ubicacion = new Optional<UbicacionNota>();
+    }
+    
+    public eliminar(fecha:FechaNota){
+        if (!this.fechaEliminacion.HasValue())
+            this.fechaEliminacion = new Optional<FechaNota>(fecha);
+        else{ //No se le puede dar una fecha de eliminacion a una nota ya eliminada
+            throw new Error();
+        } 
+    }
+
+    public restaurar():void{
+        this.fechaEliminacion = new Optional<FechaNota>();
+    }
+
+    public getSnapshot():NotaSnapshot{
+        return NotaSnapshot.newSnapshot(this.notaId, this.titulo, this.cuerpo,this.fechaCreacion, this.fechaEliminacion , this.fechaActualizacion,
+                                this.ubicacion, this.usuario);
+    }
 }

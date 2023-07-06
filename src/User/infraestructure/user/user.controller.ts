@@ -1,8 +1,7 @@
 import { Body, Controller, Get } from '@nestjs/common';
-import { MementoUser } from 'src/User/domain/mementoUser';
-import { CommandHandler } from 'src/core/application/core_Comandos/CommandHandler';
+import { MementoUser } from 'src/User/domain/SnapShot/mementoUser';
+import { CommandHandler } from 'src/Shared/application/Shared_Commands/CommandHandler';
 import { UserByEmailDTO } from './DTO/userByEmailDTO';
-import { UserEmail } from 'src/User/domain/value_objects/UserEmail';
 
 @Controller('user')
 export class UserController {

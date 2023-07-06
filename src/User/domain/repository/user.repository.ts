@@ -1,6 +1,6 @@
-import { Optional } from "src/core/ortogonal_solutions/Optional";
+import { Optional } from "src/Shared/utilities/Optional";
 import { User } from "../User";
-import { MementoUser } from "../mementoUser";
+import { MementoUser } from "../SnapShot/mementoUser";
 import { Either } from "src/core/ortogonal_solutions/Either";
 
 export interface UserRepository{

@@ -1,9 +1,12 @@
-import { IValueObject } from "src/core/domain/IValueObject";
+import { IValueObject } from "src/Shared/domain/IValueObject";
+import { ParteCuerpo } from "./Cuerpo_VO/ParteCuerpo";
+import { TipoParteCuerpo } from "./Cuerpo_VO/TipoParteCuerpo";
+import { ParteCuerpoSnapshot } from "../Snapshot/ParteCuerpoSnapshot";
 
 export class CuerpoNota implements IValueObject{
-    private cuerpo:string;
+    private cuerpo:Array<ParteCuerpo> = new Array<ParteCuerpo>();
 
-    constructor(s:string){
+    constructor(s:Array<ParteCuerpo>){
         this.cuerpo = s;
     }
 
@@ -14,10 +17,11 @@ export class CuerpoNota implements IValueObject{
             return false;
     }
 
-    public getCuerpo():string {
-        return this.cuerpo;
+    public getCuerpo():Array<ParteCuerpoSnapshot> {
+        let list:Array<ParteCuerpoSnapshot> = new Array<ParteCuerpoSnapshot>();
+        for (const parte of this.cuerpo) {
+            list.push(parte.getParteSnapshot());
+        }
+        return list;
     }
-
-
-
 }

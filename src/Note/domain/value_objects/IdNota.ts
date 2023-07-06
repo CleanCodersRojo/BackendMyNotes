@@ -1,4 +1,4 @@
-import { IValueObject } from "src/core/domain/IValueObject";
+import { IValueObject } from "src/Shared/domain/IValueObject";
 
 export class IdNota implements IValueObject{
     private uuid:string = "";
