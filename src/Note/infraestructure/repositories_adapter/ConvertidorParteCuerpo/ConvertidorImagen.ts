@@ -6,6 +6,6 @@ import { ConstructorImagenCuerpo } from "src/Note/domain/fabrics/FabricaImagen/C
 
 export class ConvertidorImagen implements ConvertidorParteCuerpo{
     convertir(partemodel:Document):ParteCuerpoSnapshot{
-        return (new ConstructorImagenCuerpo).newSnapshot(partemodel.bytes);
+        return (new ConstructorImagenCuerpo).newSnapshot(partemodel.url);
     }
 }

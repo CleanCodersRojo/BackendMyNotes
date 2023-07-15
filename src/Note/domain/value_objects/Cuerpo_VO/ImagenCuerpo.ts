@@ -7,15 +7,15 @@ import { ConstructorImagenCuerpo } from "../../fabrics/FabricaImagen/Constructor
 
 export class ImagenCuerpo extends ParteCuerpo{
     
-    private bytes:Uint8Array; //Verificar que tenga los valores de un byte
+    private url:string; //Verificar que tenga los valores de un byte
 
-    constructor(bytes:Uint8Array){
+    constructor(url:string){
         super(TipoParteCuerpo.Imagen);
-        this.bytes = bytes;
+        this.url =url;
     }
 
     public equals(other: ImagenCuerpo): boolean{
-        if (this.bytes == other.bytes)
+        if (this.url == other.url)
             return true;
         else
             return false;
@@ -23,6 +23,6 @@ export class ImagenCuerpo extends ParteCuerpo{
 
     public getParteSnapshot(): ImagenSnapshot {
         const constructor:ConstructorImagenCuerpo = new ConstructorImagenCuerpo();
-        return constructor.newSnapshot(this.bytes);
+        return constructor.newSnapshot(this.url);
     }
 }

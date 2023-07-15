@@ -1,7 +1,7 @@
 import { Optional } from "src/Shared/utilities/Optional";
 import { User } from "../User";
 import { MementoUser } from "../SnapShot/mementoUser";
-import { Either } from "src/core/ortogonal_solutions/Either";
+import { Either } from "src/Shared/utilities/Either";
 
 export interface UserRepository{
     findUserLogin(email:string,pass:string):Promise<Either<Optional<MementoUser>, Error>>;

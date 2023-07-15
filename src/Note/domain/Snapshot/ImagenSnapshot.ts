@@ -4,10 +4,10 @@ import { ParteCuerpoSnapshot } from "./ParteCuerpoSnapshot";
 
 
 export class ImagenSnapshot extends ParteCuerpoSnapshot{
-    bytes:Uint8Array;
+    url:string;
 
-    constructor(bytes:Uint8Array){
+    constructor(url:string){
         super(TipoParteCuerpo.Imagen);
-        this.bytes = bytes;
+        this.url = url;
     }
 }
