@@ -1,17 +1,26 @@
-/* import { InjectModel } from "@nestjs/mongoose";
+ import { InjectModel } from "@nestjs/mongoose";
 import { User } from "src/User/domain/User";
 import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
-import { MementoUser } from "src/User/domain/mementoUser";
+
 import { UserRepository } from "src/User/domain/repository/user.repository";
-import { Either } from "src/core/ortogonal_solutions/Either";
-import { Optional } from "src/core/ortogonal_solutions/Optional";
+
 import { userModel } from "../../schemas/userModel";
+import { Optional } from "src/Shared/utilities/Optional";
+import { Either } from "src/Shared/utilities/Either";
+import { MementoUser } from "src/User/domain/SnapShot/mementoUser";
 
 export class MongoUserRepository implements UserRepository{
     constructor(@InjectModel(User.name) private readonly usermodel:userModel){}
 
-   async createUser(email: string, name: string, pass: string, bornDate: string): Promise<Either<Optional<MementoUser>, Error>> {
-        throw new Error("Method not implemented.");
+   async createUser(user:User): Promise<Either<User, Error>> {
+       const mementoUser:MementoUser= user.guardar()
+
+       try {
+        const userSaved= await (new this.usermodel(mementoUser)).save();
+        return Either.makeLeft<User, Error>(user);
+    } catch (e) {
+        return Either.makeRight<User, Error>(e);
+    }
     }
     
     async findUserLogin(email: string, pass: string): Promise<Either<Optional<MementoUser>, Error>>{
@@ -44,4 +53,4 @@ export class MongoUserRepository implements UserRepository{
     }
 
     
-} */
+} 
