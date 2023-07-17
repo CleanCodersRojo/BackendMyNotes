@@ -7,6 +7,7 @@ import { NotaSnapshot} from "../../domain/Snapshot/NotaSnapshot";
 import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
 import { Optional } from "src/Shared/utilities/Optional";
 import { IdNota } from "src/Note/domain/value_objects/IdNota";
+import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
 
 export class EliminarNota implements IServicio<NotaSnapshot>{
     private readonly repositorio:RepositorioNota;
@@ -18,7 +19,8 @@ export class EliminarNota implements IServicio<NotaSnapshot>{
     public async execute(cmd:EliminarNotaComando):Promise<Either<NotaSnapshot, Error>>{
         //Buscar la nota primero de la base de datos
         let nota:Nota;
-        const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaNota.fabricarIdNota(cmd.id));
+        const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaUser.fabricarIdUser(cmd.usuarioId)
+                                                                                        ,FabricaNota.fabricarIdNota(cmd.id));
         
         //MANEJO DE EITHER Y OPTIONAL
         if (v1.isLeft()){

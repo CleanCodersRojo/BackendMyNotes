@@ -9,6 +9,7 @@ import { Optional } from "src/Shared/utilities/Optional";
 import { TituloNota } from "src/Note/domain/value_objects/TituloNota";
 import { FechaNota } from "src/Note/domain/value_objects/FechaNota";
 import { UbicacionNota } from "src/Note/domain/value_objects/UbicacionNota";
+import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
 
 export class ModificarNota implements IServicio<NotaSnapshot>{
     private readonly repositorio:RepositorioNota;
@@ -18,14 +19,11 @@ export class ModificarNota implements IServicio<NotaSnapshot>{
     }
 
     public async execute(cmd:ModificarNotaComando):Promise<Either<NotaSnapshot, Error>>{
-        console.log("CMD", cmd);
-        console.log("=======================");
         //Buscar la nota primero de la base de datos
         let nota:Nota;
-        const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaNota.fabricarIdNota(cmd.id));
+        const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaUser.fabricarIdUser(cmd.usuarioId)
+                                                                                        ,FabricaNota.fabricarIdNota(cmd.id));
 
-        console.log("NOTA", nota);
-        console.log("=======================");
 
         //MANEJO DE EITHER Y OPTIONAL
         if (v1.isLeft()){
