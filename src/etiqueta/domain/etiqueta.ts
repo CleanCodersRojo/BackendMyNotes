@@ -11,6 +11,7 @@ export class Etiqueta {
         this.id = id;
         this.nombre =nombre
     }
+    
     public guardar():EtiquetaSnapshot{
         return  EtiquetaSnapshot.newSnapshot(this.id, this.nombre);
     }

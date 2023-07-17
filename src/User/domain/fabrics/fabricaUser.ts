@@ -17,4 +17,8 @@ export class FabricaUser {
     
         return new User(i,n,e,fc,p);
     }
+
+    static fabricarIdUser(id:string):IdUser{
+        return new IdUser(id);
+    }
 }

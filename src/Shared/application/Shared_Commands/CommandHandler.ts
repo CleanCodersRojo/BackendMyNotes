@@ -1,6 +1,6 @@
 import { IServicio } from "./IServicio";
 import { ICommand } from "./ICommand";
-import { TipoComando } from "./TipoComandoNotas";
+import { TipoComando } from "../Shared_Enums/TipoComandoNotas";
 import { Either } from 'src/Shared/utilities/Either';
 
 export class CommandHandler<TView>{
