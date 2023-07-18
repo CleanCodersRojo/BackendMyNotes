@@ -10,9 +10,6 @@ import { IdUser } from "src/User/domain/value_objects/IdUser";
 import { ParteCuerpoSnapshot } from "../Snapshot/ParteCuerpoSnapshot";
 import { ParteCuerpo } from "../value_objects/Cuerpo_VO/ParteCuerpo";
 import { FabricaCuerpo } from "./Shared_ParteCuerpo/FabricaCuerpo";
-import { TipoParteCuerpo } from "../value_objects/Cuerpo_VO/TipoParteCuerpo";
-import { ConstructorImagenCuerpo } from "./FabricaImagen/ConstructorImagenCuerpo";
-import { ConstructorTextoPlanoCuerpo } from "./FabricaTexto/ConstructorTextoPlanoCuerpo";
 
 export class FabricaRestaurarNota {
     static restaurarNota(snapshot:NotaSnapshot):Nota{
@@ -49,8 +46,6 @@ export class FabricaRestaurarNota {
         let fabrica:FabricaCuerpo = new FabricaCuerpo();
         
         for (const parte of cuerpo){
-            
-            console.log(parte);
             let p:ParteCuerpo = fabrica.restaurar(parte);
             nuevocuerpo.push(p);
         }

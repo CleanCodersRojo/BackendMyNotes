@@ -10,7 +10,7 @@ import { FechaNota } from '../value_objects/FechaNota';
 
 export interface RepositorioNota {
 
-  buscarNotasPorUsuario(idUser:IdUser):Promise<Either<Optional<Nota[]>, Error>>
+  buscarNotasPorUsuario(idUser:IdUser):Promise<Either<Optional<Nota[]>, Error>>;
   buscarNotaPorId(idUser:IdUser, id:IdNota):Promise<Either<Optional<Nota>, Error>>;
   buscarNotasPorTitulo(idUser:IdUser, titulo:TituloNota):Promise<Either<Optional<Nota[]>, Error>>;
   buscarNotasPorCuerpo(idUser:IdUser, texto:TextoPlanoCuerpo):Promise<Either<Optional<Nota[]>, Error>>;

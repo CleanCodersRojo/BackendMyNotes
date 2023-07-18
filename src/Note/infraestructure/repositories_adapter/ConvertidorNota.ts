@@ -1,25 +1,27 @@
 import { Document } from "mongodb";
 import { NotaSnapshot } from "src/Note/domain/Snapshot/NotaSnapshot";
 import { ParteCuerpoSnapshot } from "src/Note/domain/Snapshot/ParteCuerpoSnapshot";
-import { ConstructorImagenCuerpo } from "src/Note/domain/fabrics/FabricaImagen/ConstructorImagenCuerpo";
-import { ConstructorTextoPlanoCuerpo } from "src/Note/domain/fabrics/FabricaTexto/ConstructorTextoPlanoCuerpo";
 import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { Optional } from "src/Shared/utilities/Optional";
 import { ConvertidorCuerpo } from "./ConvertidorCuerpo";
+import { Either } from "src/Shared/utilities/Either";
 
 export class ConvertidorNota {
-    static convertirASnapshot(notamodel:Document):NotaSnapshot{
+    static convertirASnapshot(notamodel:Document):Either<NotaSnapshot,Error>{
         const fe:Optional<Date> = new Optional<Date>(notamodel.fechaEliminacion.value);
         const latitud:Optional<number> = new Optional<number>(notamodel.latitud.value);
         const altitud:Optional<number> = new Optional<number>(notamodel.altitud.value);
-
-        const nota:NotaSnapshot = new NotaSnapshot(notamodel.notaId, notamodel.titulo,
-            ConvertidorNota.convertirACuerpoSnapshot(notamodel.cuerpo),
-            notamodel.fechaCreacion,fe,
-            notamodel.fechaActualizacion, latitud,
-            altitud, notamodel.usuarioId);
-
-        return nota;
+        try {
+            const nota:NotaSnapshot = new NotaSnapshot(notamodel.notaId, notamodel.titulo,
+                ConvertidorNota.convertirACuerpoSnapshot(notamodel.cuerpo),
+                notamodel.fechaCreacion,fe,
+                notamodel.fechaActualizacion, latitud,
+                altitud, notamodel.usuarioId);
+            return Either.makeLeft<NotaSnapshot,Error>(nota);
+        } catch (e) {
+            
+            return Either.makeRight<NotaSnapshot,Error>(e);
+        }
     }
 
     private static convertirACuerpoSnapshot(cuerpomodel:Document[]):Array<ParteCuerpoSnapshot>{

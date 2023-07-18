@@ -5,6 +5,7 @@ import { IServicioQuery } from "src/Shared/application/Shared_Querys/IServicioQu
 import { ActualizacionNotaQuery } from "./ActualizacionNotaQuery";
 import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
 import { NotaSnapshot } from "src/Note/domain/Snapshot/NotaSnapshot";
+import { EmptyListException } from "../../excepciones/EmptyListException";
 
 export class ActualizacionNotaQueryService implements IServicioQuery<NotaSnapshot[]>{
     private readonly repositorio:RepositorioNota;
@@ -25,7 +26,7 @@ export class ActualizacionNotaQueryService implements IServicioQuery<NotaSnapsho
                 return Either.makeLeft<NotaSnapshot[], Error>(notaSnaphot);
             }
             else {
-                return Either.makeRight<NotaSnapshot[], Error>(new Error());
+                return Either.makeRight<NotaSnapshot[], Error>(new EmptyListException(FabricaUser.fabricarIdUser(query.usuarioId)));
             }   
         }
         else {

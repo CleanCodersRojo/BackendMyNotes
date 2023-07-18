@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Catch, Controller, Delete, Get, HttpException, Param, Patch, Post, Res, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CrearNotaComando } from 'src/Note/application/crear_Nota/CrearNotaComando';
 import { CrearNotaDTO } from './DTOs/CrearNotaDTO';
 import { CommandHandler } from '../../../Shared/application/Shared_Commands/CommandHandler';
@@ -34,13 +34,21 @@ import { TituloNotaQuery } from 'src/Note/application/querys_Nota/buscarTitulo_N
 import { CuerpoNotaQuery } from 'src/Note/application/querys_Nota/buscarCuerpo_Nota/CuerpoNotaQuery';
 import { CreacionNotaQuery } from 'src/Note/application/querys_Nota/buscarCreacion_Nota/CreacionNotaQuery';
 import { ActualizacionNotaQuery } from 'src/Note/application/querys_Nota/buscarActualizacion_Nota/ActualizacionNotaQuery';
+import { ExceptionHandler } from 'src/Shared/infraestructure/Shared_Inf_Exceptions/ExceptionHandler';
+import { ConstructorExceptionHandler } from 'src/Shared/infraestructure/Shared_Inf_Exceptions/ConstructorExceptionHandler';
+import { AbstractException } from 'src/Shared/application/Shared_App_Exceptions/AbstractException';
+import { response } from 'express';
 
 @Controller('nota')
 export class NotaController {
     private commandHandler:CommandHandler<NotaSnapshot> = new CommandHandler<NotaSnapshot>();
     private queryHandler:QueryHandler<NotaSnapshot[]> = new QueryHandler<NotaSnapshot[]>();
+    private errorHandler:ExceptionHandler;
 
     constructor(private adapter: MongoNotaAdapter){
+        /*CONSTRUCCION DEL EXCEPTION HANDLER*/
+        this.errorHandler = ConstructorExceptionHandler.construir();
+
         /*INYECCION DE DEPENDENCIAS*/
         /*COMMANDS */
         const servicioCrearNota:IServicio<NotaSnapshot> = new CrearNota(new GeneradorUUID(), adapter);
@@ -75,135 +83,73 @@ export class NotaController {
 
     @Get('/:id/user/:idUser/')
     async getNoteById(@Param('idUser') iduser ,@Param('id') id){
-        /*const nota:Either<Optional<Nota>, Error> = await this.adapter.buscarNotaPorId(new IdUser(iduser), new IdNota(id));
-        if (nota.isLeft()){
-            if (nota.getLeft().HasValue())
-                return Either.makeLeft<Optional<NotaSnapshot>, Error>(new Optional<NotaSnapshot>(nota.getLeft().getValue().getSnapshot()));
-            else
-                return Either.makeLeft<Optional<NotaSnapshot>, Error>(new Optional<NotaSnapshot>());
-        }
-        else {
-            return Either.makeRight<Optional<NotaSnapshot>, Error>(nota.getRight());
-        }*/
         const query = new IdNotaQuery(iduser, id);
-        return this.queryHandler.query(query);
-        
+        const result = await this.queryHandler.query(query);
+        console.log("EORRRRRRRRRRRRRRRRRRRO") 
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error);
+            //return Either.makeRight<NotaSnapshot[],HttpException>(error); 
+        }
+        else{
+            return result;
+        }        
     }
 
     @Get('/user/:id')
-    async getNotesByUser(@Param('id') id){
-        /*const notas:Either<Optional<Nota[]>, Error> = await this.adapter.buscarNotasPorUsuario(new IdUser(id));
-
-        if (notas.isLeft()){
-            if (notas.getLeft().HasValue()){
-                let snapshots:NotaSnapshot[] = [];
-                for (const nota of notas.getLeft().getValue()){
-                    snapshots.push(nota.getSnapshot());
-                }
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>(snapshots));
-            }
-            else{
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>());
-            }
-        }
-        else{
-            return Either.makeRight<Optional<NotaSnapshot[]>, Error>(notas.getRight());
-        }*/
+    async getNotesByUser(@Param('id') id, @Res({ passthrough: true }) res: Response){
         const query = new UserNotaQuery(id);
-        return this.queryHandler.query(query);
+        const result = await this.queryHandler.query(query);
+        console.log ("EOROROROR", result);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>(result.getRight()));
+            return Either.makeRight<NotaSnapshot[],HttpException>(error);
+        }
+        return result;
     }
 
     @Get('/user/:id/titulo/:title')
     async getNotesByTitle(@Param('id') id, @Param('title') titulo){
-        /*const notas:Either<Optional<Nota[]>, Error> = await this.adapter.buscarNotasPorTitulo(new IdUser(id), new TituloNota(titulo));
-
-        if (notas.isLeft()){
-            if (notas.getLeft().HasValue()){
-                let snapshots:NotaSnapshot[] = [];
-                for (const nota of notas.getLeft().getValue()){
-                    snapshots.push(nota.getSnapshot());
-                }
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>(snapshots));
-            }
-            else{
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>());
-            }
-        }
-        else{
-            return Either.makeRight<Optional<NotaSnapshot[]>, Error>(notas.getRight());
-        }*/
         const query = new TituloNotaQuery(id, titulo);
-        return this.queryHandler.query(query);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error); 
+        }
+        return result;
     }
 
     @Get('/user/:id/cuerpo/:body')
     async getNotesByBody(@Param('id') id, @Param('body') cuerpo){
-        /*const notas:Either<Optional<Nota[]>, Error> = await this.adapter.buscarNotasPorCuerpo(new IdUser(id), new TextoPlanoCuerpo(cuerpo));
-
-        if (notas.isLeft()){
-            if (notas.getLeft().HasValue()){
-                let snapshots:NotaSnapshot[] = [];
-                for (const nota of notas.getLeft().getValue()){
-                    snapshots.push(nota.getSnapshot());
-                }
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>(snapshots));
-            }
-            else{
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>());
-            }
-        }
-        else{
-            return Either.makeRight<Optional<NotaSnapshot[]>, Error>(notas.getRight());
-        }*/
-        
         const query = new CuerpoNotaQuery(id, cuerpo);
-        return this.queryHandler.query(query);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error); 
+        }
+        return result;
     }
 
     @Get('/user/:id/creacion/:fecha')
     async getNotesByFechaCreacion(@Param('id') id, @Param('fecha') fecha){
-        /*const notas:Either<Optional<Nota[]>, Error> = await this.adapter.buscarNotasPorFechaCreacion(new IdUser(id), new FechaNota(fecha));
-
-        if (notas.isLeft()){
-            if (notas.getLeft().HasValue()){
-                let snapshots:NotaSnapshot[] = [];
-                for (const nota of notas.getLeft().getValue()){
-                    snapshots.push(nota.getSnapshot());
-                }
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>(snapshots));
-            }
-            else{
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>());
-            }
-        }
-        else{
-            return Either.makeRight<Optional<NotaSnapshot[]>, Error>(notas.getRight());
-        }*/
         const query = new CreacionNotaQuery(id, fecha);
-        return this.queryHandler.query(query);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error); 
+        }
+        return result;
     }
 
     @Get('/user/:id/actualizacion/:fecha')
     async getNotesByFechaActualizacion(@Param('id') id, @Param('fecha') fecha){
-        /*const notas:Either<Optional<Nota[]>, Error> = await this.adapter.buscarNotasPorFechaActualizacion(new IdUser(id), new FechaNota(fecha));
-
-        if (notas.isLeft()){
-            if (notas.getLeft().HasValue()){
-                let snapshots:NotaSnapshot[] = [];
-                for (const nota of notas.getLeft().getValue()){
-                    snapshots.push(nota.getSnapshot());
-                }
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>(snapshots));
-            }
-            else{
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>());
-            }
-        }
-        else{
-            return Either.makeRight<Optional<NotaSnapshot[]>, Error>(notas.getRight());
-        }*/
         const query = new ActualizacionNotaQuery(id, fecha);
-        return this.queryHandler.query(query);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error);     
+        }
+        return result;
     }
 
     //========================================================================================================//
@@ -242,17 +188,11 @@ export class NotaController {
                                                             nuevaNota.fechaActualizacion, latitud, altitud, nuevaNota.usuarioId);
                                                                                         
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
-        console.log("RESULTDADO",result);    
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot,HttpException>(error); 
+        }  
         return result;
-    }
-
-    @Post('/testValidation')
-    @UsePipes(ValidationPipe)
-    async testValidation(@Body() nuevaNota:CrearNotaDTO){
-        const validacion:ParteCuerpoValidacion = new ParteCuerpoValidacion()
-        console.log(nuevaNota.cuerpo);
-        console.log("=============================================");
-        console.log(validacion.cuerpoValidacion(nuevaNota.cuerpo));
     }
 
     @Delete()
@@ -260,7 +200,10 @@ export class NotaController {
     async eliminarNota(@Body() nota:EliminarNotaDTO){
         const cmd:EliminarNotaComando = new EliminarNotaComando(nota.id,nota.fechaEliminacion, nota.usuarioId);
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
-
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot,HttpException>(error); 
+        }   
         return result;
     }
 
@@ -275,14 +218,14 @@ export class NotaController {
 
         const validacion:ParteCuerpoValidacion = new ParteCuerpoValidacion();
         if (cuerpo.HasValue() && (!validacion.cuerpoValidacion(nota.cuerpo))){
-            return new Error();
+            return Either.makeRight<NotaSnapshot,Error>(new BadRequestException("Cuerpo de la Nota Inválido"));
         }
 
         //Validar que un valor de ubicacion si se tiene pero el otro no
         if (!latitud.HasValue() && altitud.HasValue()){
-            return Either.makeRight<NotaSnapshot,Error>(new Error());
+            return Either.makeRight<NotaSnapshot,Error>(new BadRequestException("Latitud de la Nota Inválida"));
         } else if (latitud.HasValue() && !altitud.HasValue()){
-            return Either.makeRight<NotaSnapshot,Error>(new Error());
+            return Either.makeRight<NotaSnapshot,Error>(new BadRequestException("Altitud de la Nota Inválida"));
         }
 
         const cmd:ModificarNotaComando = new ModificarNotaComando(nota.id,nota.fechaActualizacion,titulo, 
@@ -290,7 +233,10 @@ export class NotaController {
                                                                     fechaeliminada, 
                                                                     latitud, altitud, nota.usuarioId);
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
-
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot,HttpException>(error); 
+        }  
         return result;
     }
 }

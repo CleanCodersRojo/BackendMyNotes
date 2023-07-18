@@ -6,14 +6,8 @@ import { CuerpoNota } from "../value_objects/CuerpoNota";
 import { FechaNota } from "../value_objects/FechaNota";
 import { UbicacionNota } from "../value_objects/UbicacionNota";
 import { IdUser } from "src/User/domain/value_objects/IdUser";
-import { NotaSnapshot } from "src/Note/domain/Snapshot/NotaSnapshot";
-import { TipoParteCuerpo } from "../value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { ParteCuerpo } from "../value_objects/Cuerpo_VO/ParteCuerpo";
 import { FabricaCuerpo } from "./Shared_ParteCuerpo/FabricaCuerpo";
-import { ConstructorImagenCuerpo } from "./FabricaImagen/ConstructorImagenCuerpo";
-import { TextoPlanoCuerpo } from '../value_objects/Cuerpo_VO/TextoPlanoCuerpo';
-import { ConstructorTextoPlanoCuerpo } from "./FabricaTexto/ConstructorTextoPlanoCuerpo";
-import { ParteCuerpoSnapshot } from "../Snapshot/ParteCuerpoSnapshot";
 import { ReceptorParteCuerpo } from "./Shared_ParteCuerpo/ReceptorParteCuerpo";
 
 

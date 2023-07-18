@@ -14,10 +14,6 @@ export class ConvertidorCuerpo {
         this.convertidores.set(TipoParteCuerpo.textoPlano, new ConvertidorTexto());
     }
 
-    /*public addConstructor(t:TipoParteCuerpo, c:ConstructorParteCuerpo){
-        this.constructores.set(t,c);
-    }*/
-
     public convertir(partemodel:Document):ParteCuerpoSnapshot{
         for (let key of this.convertidores.keys()) {
             if (partemodel.tipo == key.valueOf()){

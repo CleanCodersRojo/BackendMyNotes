@@ -1,6 +1,5 @@
 import { IValueObject } from "src/Shared/domain/IValueObject";
 import { ParteCuerpo } from "./Cuerpo_VO/ParteCuerpo";
-import { TipoParteCuerpo } from "./Cuerpo_VO/TipoParteCuerpo";
 import { ParteCuerpoSnapshot } from "../Snapshot/ParteCuerpoSnapshot";
 
 export class CuerpoNota implements IValueObject{

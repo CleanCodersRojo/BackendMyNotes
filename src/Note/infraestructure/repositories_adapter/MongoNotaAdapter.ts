@@ -15,6 +15,7 @@ import { TextoPlanoCuerpo } from 'src/Note/domain/value_objects/Cuerpo_VO/TextoP
 import { IdEtiqueta } from 'src/etiqueta/domain/value_objects/idEtiqueta';
 import { RepositorioNota } from 'src/Note/domain/repositories/RepositorioNota';
 import { FechaNota } from 'src/Note/domain/value_objects/FechaNota';
+import { DataBaseException } from '../excepciones/DataBaseException';
 
 @Injectable()
 export class MongoNotaAdapter implements RepositorioNota{
@@ -24,18 +25,24 @@ export class MongoNotaAdapter implements RepositorioNota{
         try {
             const data = await this.notamodel.find({usuarioId:id.getId()}).sort({fechaActualizacion:-1});
             const notas: Nota[]= [];
-            
+            console.log("TEST1",data);
             for (const notajson of data){
-                const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notajson);
-                const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot);
-                notas.push(nota);
+                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
+                
+                if(snapshot.isLeft()){
+                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
+                    notas.push(nota);
+                } else{
+                    console.log(snapshot);
+                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
+                }
             }
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>()));
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(e))
+            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(new DataBaseException(e)))
         }
     }
     
@@ -43,13 +50,21 @@ export class MongoNotaAdapter implements RepositorioNota{
         try {
             //const notaBuscada = await this.notamodel.findOne({notaId: id.getId()});
             const notaBuscada = await this.notamodel.findOne({$and:[{usuarioId: idUser.getId()},{notaId: id.getId()}]}).sort({fechaActualizacion:-1});
+            const result:Optional<any> = new Optional<any>(notaBuscada);
+            if(result.HasValue()){
+                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(result.getValue());     
 
-            const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notaBuscada);
-            const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot);
-
-            return Promise.resolve(Either.makeLeft<Optional<Nota>, Error>(new Optional<Nota>(nota)));
+                if(snapshot.isLeft()){
+                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
+                    return Promise.resolve(Either.makeLeft<Optional<Nota>, Error>(new Optional<Nota>(nota)));
+                } else{
+                    return Promise.resolve(Either.makeRight<Optional<Nota>, Error>(snapshot.getRight()))
+                }
+            } else {
+                return Promise.resolve(Either.makeLeft<Optional<Nota>, Error>(new Optional<Nota>()));
+            }
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<Nota>, Error>(e));
+            return Promise.resolve(Either.makeRight<Optional<Nota>, Error>(new DataBaseException(e)));
         }
     }
 
@@ -59,16 +74,20 @@ export class MongoNotaAdapter implements RepositorioNota{
             const notas: Nota[]= [];
             
             for (const notajson of data){
-                const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notajson);
-                const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot);
-                notas.push(nota);
+                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
+                if(snapshot.isLeft()){
+                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
+                    notas.push(nota);
+                } else{
+                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
+                }
             }
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>()));
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(e))
+            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(new DataBaseException(e)))
         }
     }
 
@@ -81,20 +100,25 @@ export class MongoNotaAdapter implements RepositorioNota{
             const notas: Nota[]= [];
             console.log(data);
             for (const notajson of data){
-                const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notajson);
-                const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot);
-                notas.push(nota);
+                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
+                if(snapshot.isLeft()){
+                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
+                    notas.push(nota);
+                } else{
+                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
+                }
             }
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>()));
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(e))
+            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(new DataBaseException(e)))
         }
     }
     
     async buscarNotasPorEtiqueta(idUser:IdUser, idTag:IdEtiqueta):Promise<Either<Optional<Nota[]>, Error>>{
+        //NO IMPLEMENTADO
         return Promise.resolve(undefined);
     }
 
@@ -104,16 +128,20 @@ export class MongoNotaAdapter implements RepositorioNota{
             const notas: Nota[]= [];
             console.log(data);
             for (const notajson of data){
-                const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notajson);
-                const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot);
-                notas.push(nota);
+                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
+                if(snapshot.isLeft()){
+                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
+                    notas.push(nota);
+                } else{
+                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
+                }
             }
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>()));
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(e))
+            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(new DataBaseException(e)))
         }
     }
 
@@ -123,16 +151,20 @@ export class MongoNotaAdapter implements RepositorioNota{
             const notas: Nota[]= [];
             console.log(data);
             for (const notajson of data){
-                const snapshot:NotaSnapshot = ConvertidorNota.convertirASnapshot(notajson);
-                const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot);
-                notas.push(nota);
+                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
+                if(snapshot.isLeft()){
+                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
+                    notas.push(nota);
+                } else{
+                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
+                }
             }
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>()));
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(e))
+            return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(new DataBaseException(e)))
         }
     }
 
@@ -143,25 +175,27 @@ export class MongoNotaAdapter implements RepositorioNota{
 
     //GuardarNota en la Base de Datos
     async guardarNota(nota:Nota): Promise<Either<Nota, Error>> {
-        console.log('CreateNotaDTO', nota);
-        console.log("=========================");
-        console.log('nota', nota.getSnapshot().cuerpo);
-
         const snapshot:NotaSnapshot = nota.getSnapshot();
         try {
             const notaGuardada = await (new this.notamodel(snapshot)).save();
-            return Either.makeLeft<Nota, Error>(nota);
+            const notaSnapshot = ConvertidorNota.convertirASnapshot(notaGuardada);
+            if(notaSnapshot.isLeft()){
+                const notaConfirmada = FabricaRestaurarNota.restaurarNota(notaSnapshot.getLeft());
+                return Either.makeLeft<Nota, Error>(notaConfirmada);
+            } else{
+                return Promise.resolve(Either.makeRight<Nota, Error>(notaSnapshot.getRight()))
+            }
         } catch (e) {
-            return Either.makeRight<Nota, Error>(e);
+            return Either.makeRight<Nota, Error>(new DataBaseException(e));
         }
     }
 
     async eliminarNota(id:IdNota):Promise<Either<Optional<IdNota>, Error>>{
         try {
             const notaGuardada = await this.notamodel.deleteOne(/*{$and:[*/{notaId: id.getId()}/*,{}]}*/);
-            return Promise.resolve(Either.makeLeft<Optional<IdNota>, Error>( new Optional<IdNota>(id)));
+            return Promise.resolve(Either.makeLeft<Optional<IdNota>, Error>(new Optional<IdNota>(id)));
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<IdNota>, Error>(e));
+            return Promise.resolve(Either.makeRight<Optional<IdNota>, Error>(new DataBaseException(e)));
         }
     }
     
@@ -179,11 +213,15 @@ export class MongoNotaAdapter implements RepositorioNota{
                 {titulo,cuerpo,fechaEliminacion,fechaActualizacion, latitud, altitud},
                 { new: true },
             )
-
-            console.log(updatedNota);
-            return Promise.resolve(Either.makeLeft<Optional<Nota>, Error>(new Optional<Nota>(nota)));
+            const notaSnapshot = ConvertidorNota.convertirASnapshot(updatedNota);
+            if(notaSnapshot.isLeft()){
+                const notaConfirmada = FabricaRestaurarNota.restaurarNota(notaSnapshot.getLeft());
+                return Promise.resolve(Either.makeLeft<Optional<Nota>, Error>(new Optional<Nota>(notaConfirmada)));
+            } else{
+                return Promise.resolve(Either.makeRight<Optional<Nota>, Error>(notaSnapshot.getRight()));
+            }   
         } catch (e) {
-            return Promise.resolve(Either.makeRight<Optional<Nota>, Error>(e));
+            return Promise.resolve(Either.makeRight<Optional<Nota>, Error>(new DataBaseException(e)));
         } 
     }
 }

@@ -7,6 +7,7 @@ import { ConvertidorTexto } from "src/Note/infraestructure/repositories_adapter/
 import { ConstructorTextoPlanoCuerpo } from "src/Note/domain/fabrics/FabricaTexto/ConstructorTextoPlanoCuerpo";
 import { TextoPlanoCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TextoPlanoCuerpo";
 import { NotaSnapshot } from "src/Note/domain/Snapshot/NotaSnapshot";
+import { EmptyListException } from "../../excepciones/EmptyListException";
 
 export class CuerpoNotaQueryService implements IServicioQuery<NotaSnapshot[]>{
     private readonly repositorio:RepositorioNota;
@@ -33,7 +34,7 @@ export class CuerpoNotaQueryService implements IServicioQuery<NotaSnapshot[]>{
                 return Either.makeLeft<NotaSnapshot[], Error>(notaSnaphot);
             }
             else {
-                return Either.makeRight<NotaSnapshot[], Error>(new Error());
+                return Either.makeRight<NotaSnapshot[], Error>(new EmptyListException(FabricaUser.fabricarIdUser(query.usuarioId)));
             }   
         }
         else {
