@@ -4,6 +4,7 @@ import { IdEtiqueta } from "./value_objects/idEtiqueta";
 import { NombreEtiqueta } from "./value_objects/nombreEtriqueta";
 
 export class Etiqueta {
+    
     private id:IdEtiqueta;
     private nombre: NombreEtiqueta;
  

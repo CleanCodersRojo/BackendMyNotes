@@ -12,23 +12,27 @@ import { UserCreateDTO } from './DTO/userCreateDTO';
 import { UserLoginDTO } from './DTO/userLoginDTO';
 import { UserLogin } from 'src/User/application/userLogin';
 
+import { userModel,userSchema } from "../../infraestructure/schemas/userModel";
+
 @Controller('user')
 export class UserController {
 
     commandHandler:CommandHandler<MementoUser> = new CommandHandler();
-    repoUser: UserRepository;
+    
+    constructor(private repoUser: UserRepository){
+        
+    }
 
     @Get()
     async UserByEmail(@Body() userEmail:UserByEmailDTO){
         const userApp=new UsertByEmail(this.repoUser)
         return userApp.findUserEmail(userEmail.email)
 
-        
     }
     @Post()
     async CreateUser(@Body() UserCreateDTO:UserCreateDTO){
         const userApp=new CreateUser(this.repoUser)
-        return userApp.createUser(UserCreateDTO.email,UserCreateDTO.name,UserCreateDTO.pass,UserCreateDTO.bornDate)
+       // return userApp.createUser(UserCreateDTO.email,UserCreateDTO.name,UserCreateDTO.pass,UserCreateDTO.bornDate)
         
     }
 
