@@ -5,7 +5,7 @@ import { IServicioQuery } from "src/Shared/application/Shared_Querys/IServicioQu
 import { TituloNotaQuery } from "./TituloNotaQuery";
 import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
 import { NotaSnapshot } from "src/Note/domain/Snapshot/NotaSnapshot";
-import { EmptyListException } from "../../excepciones/EmptyListException";
+import { EmptyListException } from "../../_excepciones/EmptyListException";
 
 export class TituloNotaQueryService implements IServicioQuery<NotaSnapshot[]>{
     private readonly repositorio:RepositorioNota;

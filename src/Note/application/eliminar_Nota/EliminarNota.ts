@@ -8,8 +8,8 @@ import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
 import { Optional } from "src/Shared/utilities/Optional";
 import { IdNota } from "src/Note/domain/value_objects/IdNota";
 import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
-import { NotFoundException } from "../excepciones/NotFoundException";
-import { DeleteNotValidNoteException } from "../excepciones/DeleteNotValidNoteException";
+import { NotFoundException } from "../_excepciones/NotFoundException";
+import { DeleteNotValidNoteException } from "../_excepciones/DeleteNotValidNoteException";
 
 export class EliminarNota implements IServicio<NotaSnapshot>{
     private readonly repositorio:RepositorioNota;

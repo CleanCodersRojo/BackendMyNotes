@@ -8,7 +8,7 @@ import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
 import { Optional } from "src/Shared/utilities/Optional";
 import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
 import { IdNota } from "src/Note/domain/value_objects/IdNota";
-import { NotFoundException } from "../excepciones/NotFoundException";
+import { NotFoundException } from "../_excepciones/NotFoundException";
 
 export class ModificarNota implements IServicio<NotaSnapshot>{
     private readonly repositorio:RepositorioNota;

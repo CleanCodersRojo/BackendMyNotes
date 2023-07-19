@@ -6,7 +6,7 @@ import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
 import { NotaSnapshot } from "src/Note/domain/Snapshot/NotaSnapshot";
 import { CONNREFUSED } from "dns";
 import { NotFoundException } from "@nestjs/common";
-import { EmptyListException } from "../../excepciones/EmptyListException";
+import { EmptyListException } from "../../_excepciones/EmptyListException";
 
 export class UserNotaQueryService implements IServicioQuery<NotaSnapshot[]>{
     private readonly repositorio:RepositorioNota;

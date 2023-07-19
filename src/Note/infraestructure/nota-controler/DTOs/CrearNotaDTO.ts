@@ -1,9 +1,10 @@
-import { IsArray, IsDateString, IsNumber, IsOptional, IsString, Validate, ValidateNested } from "class-validator";
+import { IsArray, IsDateString, IsDecimal, IsNumber, IsOptional, IsString, Validate, ValidateNested } from "class-validator";
 import { ParteCuerpoSnapshot } from "src/Note/domain/Snapshot/ParteCuerpoSnapshot";
 import { ReceptorParteCuerpo } from "src/Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo";
 import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { ParteCuerpoDTO } from "./ParteCuerpoDTO";
 import { Type } from "class-transformer";
+import { isFloat32Array } from "util/types";
 
 
 export class CrearNotaDTO{

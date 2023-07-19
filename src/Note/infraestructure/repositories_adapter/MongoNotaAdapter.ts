@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import { Nota } from 'src/Note/domain/Nota';
-import {NotaSchema, notaModel} from 'src/Note/infraestructure/schemas/nota.schema';
+import {notaModel} from 'src/Note/infraestructure/schemas/nota.schema';
 import { Either } from 'src/Shared/utilities/Either';
 import { Optional } from 'src/Shared/utilities/Optional';
 import { NotaSnapshot } from 'src/Note/domain/Snapshot/NotaSnapshot';
