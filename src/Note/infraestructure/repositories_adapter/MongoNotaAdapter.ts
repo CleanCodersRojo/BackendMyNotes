@@ -21,22 +21,26 @@ import { DataBaseException } from '../excepciones/DataBaseException';
 export class MongoNotaAdapter implements RepositorioNota{
     constructor(@InjectModel(Nota.name) private readonly notamodel:notaModel){}
 
+    private transformList(data:any):Nota[]{
+        const notas: Nota[]= [];
+
+        for (const notajson of data){
+            const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
+            
+            if(snapshot.isLeft()){
+                const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
+                notas.push(nota);
+            }
+        }
+
+        return notas;
+    }
+
     async buscarNotasPorUsuario(id:IdUser):Promise<Either<Optional<Nota[]>, Error>>{
         try {
             const data = await this.notamodel.find({usuarioId:id.getId()}).sort({fechaActualizacion:-1});
-            const notas: Nota[]= [];
-            console.log("TEST1",data);
-            for (const notajson of data){
-                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
-                
-                if(snapshot.isLeft()){
-                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
-                    notas.push(nota);
-                } else{
-                    console.log(snapshot);
-                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
-                }
-            }
+            const notas:Nota[] = this.transformList(data);
+
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else
@@ -71,17 +75,7 @@ export class MongoNotaAdapter implements RepositorioNota{
     async buscarNotasPorTitulo(idUser:IdUser, titulo:TituloNota):Promise<Either<Optional<Nota[]>, Error>>{
         try {
             const data = await this.notamodel.find({$and:[{usuarioId: idUser.getId()},{titulo: {$regex: titulo.getTitulo()}}]}).sort({fechaActualizacion:-1});
-            const notas: Nota[]= [];
-            
-            for (const notajson of data){
-                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
-                if(snapshot.isLeft()){
-                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
-                    notas.push(nota);
-                } else{
-                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
-                }
-            }
+            const notas:Nota[] = this.transformList(data);
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else
@@ -97,17 +91,7 @@ export class MongoNotaAdapter implements RepositorioNota{
 
             const data = await this.notamodel.find({$and:[{usuarioId: idUser.getId()},
                                                     {"cuerpo.tipo":"Texto Plano"}, {"cuerpo.texto": {$regex: text.texto}}]}).sort({fechaActualizacion:-1});;
-            const notas: Nota[]= [];
-            console.log(data);
-            for (const notajson of data){
-                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
-                if(snapshot.isLeft()){
-                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
-                    notas.push(nota);
-                } else{
-                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
-                }
-            }
+            const notas:Nota[] = this.transformList(data);
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else
@@ -125,17 +109,7 @@ export class MongoNotaAdapter implements RepositorioNota{
     async buscarNotasPorFechaActualizacion(idUser:IdUser, fecha:FechaNota):Promise<Either<Optional<Nota[]>, Error>>{
         try {
             const data = await this.notamodel.find({$and:[{usuarioId: idUser.getId()},{fechaActualizacion:fecha.getFecha()}]}).sort({fechaActualizacion:-1});;
-            const notas: Nota[]= [];
-            console.log(data);
-            for (const notajson of data){
-                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
-                if(snapshot.isLeft()){
-                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
-                    notas.push(nota);
-                } else{
-                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
-                }
-            }
+            const notas:Nota[] = this.transformList(data);
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else
@@ -148,17 +122,7 @@ export class MongoNotaAdapter implements RepositorioNota{
     async buscarNotasPorFechaCreacion(idUser:IdUser, fecha:FechaNota):Promise<Either<Optional<Nota[]>, Error>>{
         try {
             const data = await this.notamodel.find({$and:[{usuarioId: idUser.getId()},{fechaCreacion:fecha.getFecha()}]}).sort({fechaActualizacion:-1});;
-            const notas: Nota[]= [];
-            console.log(data);
-            for (const notajson of data){
-                const snapshot:Either<NotaSnapshot,Error> = ConvertidorNota.convertirASnapshot(notajson);
-                if(snapshot.isLeft()){
-                    const nota:Nota = FabricaRestaurarNota.restaurarNota(snapshot.getLeft());
-                    notas.push(nota);
-                } else{
-                    return Promise.resolve(Either.makeRight<Optional<Nota[]>, Error>(snapshot.getRight()))
-                }
-            }
+            const notas:Nota[] = this.transformList(data);
             if(!(notas.length === 0))
                 return Promise.resolve(Either.makeLeft<Optional<Nota[]>,Error>(new Optional<Nota[]>(notas)));
             else

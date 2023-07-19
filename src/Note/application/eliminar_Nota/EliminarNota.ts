@@ -9,6 +9,7 @@ import { Optional } from "src/Shared/utilities/Optional";
 import { IdNota } from "src/Note/domain/value_objects/IdNota";
 import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
 import { NotFoundException } from "../excepciones/NotFoundException";
+import { DeleteNotValidNoteException } from "../excepciones/DeleteNotValidNoteException";
 
 export class EliminarNota implements IServicio<NotaSnapshot>{
     private readonly repositorio:RepositorioNota;
@@ -20,7 +21,11 @@ export class EliminarNota implements IServicio<NotaSnapshot>{
     public async execute(cmd:EliminarNotaComando):Promise<Either<NotaSnapshot, Error>>{
         //Buscar la nota primero de la base de datos
         let nota:Nota;
+        let notaEliminada:NotaSnapshot
         const idNota:IdNota = FabricaNota.fabricarIdNota(cmd.id);
+        let errorWait:Optional<Either<NotaSnapshot, Error>> = new Optional<Either<NotaSnapshot, Error>>();
+
+
         const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaUser.fabricarIdUser(cmd.usuarioId)
                                                                                         ,idNota);
         
@@ -29,6 +34,8 @@ export class EliminarNota implements IServicio<NotaSnapshot>{
             const v2:Optional<Nota> = v1.getLeft();
             if (v2.HasValue()){
                 nota = v2.getValue();
+                //Snapshot de retorno de la nota a eliminar
+                notaEliminada = nota.getSnapshot();
             }
             else {
                 //Error de Nota no encontrada
@@ -36,19 +43,20 @@ export class EliminarNota implements IServicio<NotaSnapshot>{
             }
         }
         else {
-            return Either.makeRight<NotaSnapshot, Error>(v1.getRight());
+            errorWait = new Optional<Either<NotaSnapshot, Error>>(   Either.makeRight<NotaSnapshot, Error>(v1.getRight())   );
         }
         
-        //Snapshot de retorno de la nota a eliminar
-        const notaEliminada:NotaSnapshot = nota.getSnapshot();
-
         //Eliminar Nota de la base de datos
         const idEliminado:Either<Optional<IdNota>, Error> = await this.repositorio.eliminarNota(idNota);
         
         //MANEJO DE EITHER Y OPTIONAL
         if(idEliminado.isLeft()){
             if (idEliminado.getLeft().HasValue()){
-                return Either.makeLeft<NotaSnapshot, Error>(notaEliminada);
+                if (errorWait.HasValue()){
+                    return Either.makeRight<NotaSnapshot, Error>(new DeleteNotValidNoteException(idEliminado.getLeft().getValue()));
+                }else{
+                    return Either.makeLeft<NotaSnapshot, Error>(notaEliminada);
+                }
             }
             else{
                 //Error de Nota no encontrada
@@ -56,6 +64,9 @@ export class EliminarNota implements IServicio<NotaSnapshot>{
             }
         }
         else {
+            if (errorWait.HasValue()){
+                return errorWait.getValue();
+            }
             return Either.makeRight<NotaSnapshot, Error>(idEliminado.getRight());
         }
     }

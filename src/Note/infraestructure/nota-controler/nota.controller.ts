@@ -85,7 +85,6 @@ export class NotaController {
     async getNoteById(@Param('idUser') iduser ,@Param('id') id){
         const query = new IdNotaQuery(iduser, id);
         const result = await this.queryHandler.query(query);
-        console.log("EORRRRRRRRRRRRRRRRRRRO") 
         if (result.isRight()){
             const error = this.errorHandler.transform(<AbstractException>result.getRight());
             return Either.makeRight<NotaSnapshot[],HttpException>(error);
@@ -100,7 +99,6 @@ export class NotaController {
     async getNotesByUser(@Param('id') id, @Res({ passthrough: true }) res: Response){
         const query = new UserNotaQuery(id);
         const result = await this.queryHandler.query(query);
-        console.log ("EOROROROR", result);
         if (result.isRight()){
             const error = this.errorHandler.transform(<AbstractException>(result.getRight()));
             return Either.makeRight<NotaSnapshot[],HttpException>(error);

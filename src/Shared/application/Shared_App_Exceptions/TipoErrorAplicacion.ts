@@ -1,3 +1,3 @@
 export enum TipoErrorAplicacion{
-    NotFound, idNota, TituloNota, CreacionNota, ActualizacionNota, idUser, DataBaseError
+    NotFound, idNota, TituloNota, CreacionNota, ActualizacionNota, idUser, DataBaseError, DeleteNotValidNote
 }

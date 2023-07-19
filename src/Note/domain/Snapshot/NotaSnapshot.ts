@@ -25,25 +25,7 @@ export class NotaSnapshot{
 
     constructor(id:string, titulo:string, cuerpo:Array<ParteCuerpoSnapshot>, fechaCreacion:Date, fechaEliminacion:Optional<Date>, 
         fechaActualizacion:Date, latitud:Optional<number>, altitud:Optional<number>, usuarioId:string){
-        /*Verificar que algun valor sea nulo*/
-        const userAux:Optional<string> = new Optional<string>(usuarioId);
-        if (!userAux.HasValue())
-            throw new IdUserExcepcion();
-        const idAux:Optional<string> = new Optional<string>(id); 
-        if (!idAux.HasValue())
-            throw new IdNotaExcepcion();
-        const tituloAux:Optional<string> = new Optional<string>(titulo);
-        if (!tituloAux.HasValue())
-            throw new TituloNotaExcepcion();
-        const creacionAux:Optional<Date> = new Optional<Date>(fechaCreacion);
-        if (!creacionAux.HasValue())
-            throw new FechaCreacionNotaExcepcion();
-        const actualizacionAux:Optional<Date> = new Optional<Date>(fechaActualizacion);
-        if (!actualizacionAux.HasValue())
-            throw new FechaActualizacionNotaExcepcion();
         
-            
-        //==================================//
         this.notaId = id;
         this.titulo = titulo;
         this.cuerpo = cuerpo;

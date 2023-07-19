@@ -13,6 +13,7 @@ export class ConstructorExceptionHandler{
         handler.addHttpException(HttpStatus.BAD_REQUEST, TipoErrorAplicacion.idNota);
         handler.addHttpException(HttpStatus.BAD_REQUEST, TipoErrorAplicacion.idUser);
         handler.addHttpException(HttpStatus.INTERNAL_SERVER_ERROR, TipoErrorAplicacion.DataBaseError);
+        handler.addHttpException(HttpStatus.PARTIAL_CONTENT, TipoErrorAplicacion.DeleteNotValidNote);
 
         return handler;
     }

@@ -5,23 +5,43 @@ import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoPar
 import { Optional } from "src/Shared/utilities/Optional";
 import { ConvertidorCuerpo } from "./ConvertidorCuerpo";
 import { Either } from "src/Shared/utilities/Either";
+import { FechaActualizacionNotaExcepcion } from "src/Note/domain/excepciones/FechaActualizacionNotaExcepcion";
+import { FechaCreacionNotaExcepcion } from "src/Note/domain/excepciones/FechaCreacionNotaExcepcion";
+import { TituloNotaExcepcion } from "src/Note/domain/excepciones/TituloNotaExcepcion";
+import { IdNotaExcepcion } from "src/Note/domain/excepciones/IdNotaExcepcion";
+import { IdUserExcepcion } from "src/Note/domain/excepciones/IdUserException";
 
 export class ConvertidorNota {
     static convertirASnapshot(notamodel:Document):Either<NotaSnapshot,Error>{
         const fe:Optional<Date> = new Optional<Date>(notamodel.fechaEliminacion.value);
         const latitud:Optional<number> = new Optional<number>(notamodel.latitud.value);
         const altitud:Optional<number> = new Optional<number>(notamodel.altitud.value);
-        try {
-            const nota:NotaSnapshot = new NotaSnapshot(notamodel.notaId, notamodel.titulo,
-                ConvertidorNota.convertirACuerpoSnapshot(notamodel.cuerpo),
-                notamodel.fechaCreacion,fe,
-                notamodel.fechaActualizacion, latitud,
-                altitud, notamodel.usuarioId);
-            return Either.makeLeft<NotaSnapshot,Error>(nota);
-        } catch (e) {
+
+        /*Verificar que algun valor sea nulo*/
+        const userAux:Optional<string> = new Optional<string>(notamodel.usuarioId);
+        if (!userAux.HasValue())
+            return Either.makeRight<NotaSnapshot,Error>(new IdUserExcepcion());
+        const idAux:Optional<string> = new Optional<string>(notamodel.notaId); 
+        if (!idAux.HasValue())
+            return Either.makeRight<NotaSnapshot,Error>(new IdNotaExcepcion());
+        const tituloAux:Optional<string> = new Optional<string>(notamodel.titulo);
+        if (!tituloAux.HasValue())
+            return Either.makeRight<NotaSnapshot,Error>(new TituloNotaExcepcion());
+        const creacionAux:Optional<Date> = new Optional<Date>(notamodel.fechaCreacion);
+        if (!creacionAux.HasValue())
+            return Either.makeRight<NotaSnapshot,Error>(new FechaCreacionNotaExcepcion());
+        const actualizacionAux:Optional<Date> = new Optional<Date>(notamodel.fechaActualizacion);
+        if (!actualizacionAux.HasValue())
+            return Either.makeRight<NotaSnapshot,Error>(new FechaActualizacionNotaExcepcion());        
             
-            return Either.makeRight<NotaSnapshot,Error>(e);
-        }
+        //==================================//
+
+        const nota:NotaSnapshot = new NotaSnapshot(notamodel.notaId, notamodel.titulo,
+            ConvertidorNota.convertirACuerpoSnapshot(notamodel.cuerpo),
+            notamodel.fechaCreacion,fe,
+            notamodel.fechaActualizacion, latitud,
+            altitud, notamodel.usuarioId);
+        return Either.makeLeft<NotaSnapshot,Error>(nota);
     }
 
     private static convertirACuerpoSnapshot(cuerpomodel:Document[]):Array<ParteCuerpoSnapshot>{
