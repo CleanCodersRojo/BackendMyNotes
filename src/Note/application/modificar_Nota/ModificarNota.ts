@@ -40,6 +40,7 @@ export class ModificarNota implements IServicio<NotaSnapshot>{
         }
 
         //Modificar los valores que se quieren modificar en la nota
+        nota.setActualizacion(FabricaNota.fabricarFecha(cmd.fechaActualizacion));
         if(cmd.titulo.HasValue()){
             nota.setTitulo(FabricaNota.fabricarTitulo(cmd.titulo.getValue()));
         }
