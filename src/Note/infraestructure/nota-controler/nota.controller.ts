@@ -36,11 +36,11 @@ import { CreacionNotaQuery } from 'src/Note/application/querys_Nota/buscarCreaci
 import { ActualizacionNotaQuery } from 'src/Note/application/querys_Nota/buscarActualizacion_Nota/ActualizacionNotaQuery';
 import { ExceptionHandler } from 'src/Shared/infraestructure/Shared_Inf_Exceptions/ExceptionHandler';
 import { ConstructorExceptionHandler } from 'src/Shared/infraestructure/Shared_Inf_Exceptions/ConstructorExceptionHandler';
-import { AbstractException } from 'src/Shared/application/Shared_App_Exceptions/AbstractException';
 import { response } from 'express';
 import { MongoLogAdapter } from '../_decoradores_adapter/MongoLogAdapter';
 import { LogCommandDecorador } from 'src/Note/application/_decoradores/LogCommandDecorador';
 import { LogQueryDecorador } from 'src/Note/application/_decoradores/LogQueryDecorador';
+import { AbstractException } from 'src/Shared/domain/Shared_App_Exceptions/AbstractException';
 
 @Controller('nota')
 export class NotaController {
@@ -176,7 +176,7 @@ export class NotaController {
     async crearNota(@Body() nuevaNota:CrearNotaDTO){
         const validacion:ParteCuerpoValidacion = new ParteCuerpoValidacion();
         if (!validacion.cuerpoValidacion(nuevaNota.cuerpo)){
-            return new Error();
+            return Either.makeRight<NotaSnapshot,Error>(new BadRequestException("Cuerpo de la Nota Inválido"));
         }
         
         const fechaeliminada:Optional<Date> = new Optional<Date>(nuevaNota.fechaEliminacion);
@@ -185,9 +185,9 @@ export class NotaController {
 
         //Validar que un valor de ubicacion si se tiene pero el otro no
         if (!latitud.HasValue() && altitud.HasValue()){
-            return Either.makeRight<NotaSnapshot,Error>(new Error());
+            return Either.makeRight<NotaSnapshot,Error>(new BadRequestException("Cuerpo de la Nota Inválido"));
         } else if (latitud.HasValue() && !altitud.HasValue()){
-            return Either.makeRight<NotaSnapshot,Error>(new Error());
+            return Either.makeRight<NotaSnapshot,Error>(new BadRequestException("Cuerpo de la Nota Inválido"));
         }
 
         let cuerpoCmd:Array<ReceptorParteCuerpo> = new Array<ReceptorParteCuerpo>();

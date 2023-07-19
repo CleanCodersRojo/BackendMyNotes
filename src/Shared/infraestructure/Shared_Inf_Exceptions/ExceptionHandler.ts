@@ -1,9 +1,9 @@
-import { AbstractException } from "src/Shared/application/Shared_App_Exceptions/AbstractException";
-import { TipoErrorAplicacion } from '../../application/Shared_App_Exceptions/TipoErrorAplicacion';
+import { AbstractException } from 'src/Shared/domain/Shared_App_Exceptions/AbstractException';
+import { TipoError } from '../../domain/Shared_App_Exceptions/TipoErrorAplicacion';
 import { HttpException, HttpStatus } from "@nestjs/common";
 
 export class ExceptionHandler{
-    private httpExceptions:Map<TipoErrorAplicacion, HttpStatus>;
+    private httpExceptions:Map<TipoError, HttpStatus>;
 
     constructor(){
         this.httpExceptions = new Map();
@@ -17,7 +17,7 @@ export class ExceptionHandler{
         }
     }
 
-    public addHttpException(errorhttp:HttpStatus, tipo:TipoErrorAplicacion){
+    public addHttpException(errorhttp:HttpStatus, tipo:TipoError){
         this.httpExceptions.set(tipo, errorhttp);
     }
 

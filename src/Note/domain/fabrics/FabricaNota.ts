@@ -54,7 +54,6 @@ export class FabricaNota {
             let p:ParteCuerpo = fabrica.fabricar(parte);
             nuevocuerpo.push(p);
         }
-
         return new CuerpoNota(nuevocuerpo);
     }
     

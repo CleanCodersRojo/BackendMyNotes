@@ -47,10 +47,20 @@ export class ModificarNota implements IServicio<NotaSnapshot>{
             nota.setCuerpo(FabricaNota.fabricarCuerpo(cmd.cuerpo.getValue()));
         }
         if(cmd.fechaEliminacion.HasValue()){
-            nota.eliminar(FabricaNota.fabricarFecha(cmd.fechaEliminacion.getValue()));
+            try {
+                nota.eliminar(FabricaNota.fabricarFecha(cmd.fechaEliminacion.getValue()));
+            } catch (error) {
+                return Either.makeRight<NotaSnapshot, Error>(error);
+            }
+            
         }
         if(cmd.altitud.HasValue() && cmd.latitud.HasValue()){
-            nota.localizar(FabricaNota.fabricarUbicacion(cmd.latitud.getValue(), cmd.altitud.getValue()));
+            try {
+                nota.localizar(FabricaNota.fabricarUbicacion(cmd.latitud.getValue(), cmd.altitud.getValue()));
+            } catch (error) {
+                return Either.makeRight<NotaSnapshot, Error>(error);
+            }
+            
         }
 
         //enviar la nota para que sea modificada

@@ -6,6 +6,8 @@ import {FechaNota} from "src/Note/domain/value_objects/FechaNota";
 import { IdUser } from "src/User/domain/value_objects/IdUser";
 import { UbicacionNota } from './value_objects/UbicacionNota';
 import { NotaSnapshot } from "./Snapshot/NotaSnapshot";
+import { EliminacionYaExisteExcepcion } from "./excepciones/EliminacionYaExiste";
+import { UbicacionYaExisteExcepcion } from "./excepciones/UbicacionYaExiste";
 
 export class Nota {
     private notaId:IdNota;
@@ -49,7 +51,7 @@ export class Nota {
             this.ubicacion = new Optional<UbicacionNota>(ubi);
         }
         else{//No se le puede cambiar la ubicaicon a una nota con ubicacion
-            throw new Error();
+            throw new UbicacionYaExisteExcepcion();
         }
     }
 
@@ -61,7 +63,7 @@ export class Nota {
         if (!this.fechaEliminacion.HasValue())
             this.fechaEliminacion = new Optional<FechaNota>(fecha);
         else{ //No se le puede dar una fecha de eliminacion a una nota ya eliminada
-            throw new Error();
+            throw new EliminacionYaExisteExcepcion();
         } 
     }
 
