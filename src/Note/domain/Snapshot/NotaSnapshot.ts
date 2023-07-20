@@ -1,10 +1,10 @@
-import { Optional } from "src/Shared/utilities/Optional";
+import { Optional } from "../../../Shared/utilities/Optional";
 import { IdNota } from "../value_objects/IdNota";
 import { TituloNota } from "../value_objects/TituloNota";
 import { CuerpoNota } from "../value_objects/CuerpoNota";
 import { FechaNota } from "../value_objects/FechaNota";
 import { UbicacionNota } from '../value_objects/UbicacionNota';
-import { IdUser } from "src/User/domain/value_objects/IdUser";
+import { IdUser } from "../../../User/domain/value_objects/IdUser";
 import { ParteCuerpoSnapshot } from "./ParteCuerpoSnapshot";
 import { IdNotaExcepcion } from "../excepciones/IdNotaExcepcion";
 import { TituloNotaExcepcion } from "../excepciones/TituloNotaExcepcion";

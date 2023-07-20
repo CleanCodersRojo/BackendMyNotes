@@ -1,20 +1,20 @@
 import {Injectable} from '@nestjs/common';
-import { Nota } from 'src/Note/domain/Nota';
-import {notaModel} from 'src/Note/infraestructure/schemas/nota.schema';
-import { Either } from 'src/Shared/utilities/Either';
-import { Optional } from 'src/Shared/utilities/Optional';
-import { NotaSnapshot } from 'src/Note/domain/Snapshot/NotaSnapshot';
-import { IdNota } from 'src/Note/domain/value_objects/IdNota';
+import { Nota } from '../../domain/Nota';
+import {notaModel} from '../../infraestructure/schemas/nota.schema';
+import { Either } from '../../../Shared/utilities/Either';
+import { Optional } from '../../../Shared/utilities/Optional';
+import { NotaSnapshot } from '../../domain/Snapshot/NotaSnapshot';
+import { IdNota } from '../../domain/value_objects/IdNota';
 import { InjectModel, Schema } from '@nestjs/mongoose';
 import { ConvertidorNota } from './ConvertidorNota';
-import { IdUser } from 'src/User/domain/value_objects/IdUser';
-import { ParteCuerpoSnapshot } from 'src/Note/domain/Snapshot/ParteCuerpoSnapshot';
-import { FabricaRestaurarNota } from 'src/Note/domain/fabrics/FabricaRestaurarNota';
-import { TituloNota } from 'src/Note/domain/value_objects/TituloNota';
-import { TextoPlanoCuerpo } from 'src/Note/domain/value_objects/Cuerpo_VO/TextoPlanoCuerpo';
-import { IdEtiqueta } from 'src/etiqueta/domain/value_objects/idEtiqueta';
-import { RepositorioNota } from 'src/Note/domain/repositories/RepositorioNota';
-import { FechaNota } from 'src/Note/domain/value_objects/FechaNota';
+import { IdUser } from '../../../User/domain/value_objects/IdUser';
+import { ParteCuerpoSnapshot } from '../../domain/Snapshot/ParteCuerpoSnapshot';
+import { FabricaRestaurarNota } from '../../domain/fabrics/FabricaRestaurarNota';
+import { TituloNota } from '../../domain/value_objects/TituloNota';
+import { TextoPlanoCuerpo } from '../../domain/value_objects/Cuerpo_VO/TextoPlanoCuerpo';
+import { IdEtiqueta } from '../../../etiqueta/domain/value_objects/idEtiqueta';
+import { RepositorioNota } from '../../domain/repositories/RepositorioNota';
+import { FechaNota } from '../../domain/value_objects/FechaNota';
 import { DataBaseException } from '../excepciones/DataBaseException';
 
 @Injectable()

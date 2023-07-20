@@ -1,15 +1,15 @@
 import { Document } from "mongodb";
-import { NotaSnapshot } from "src/Note/domain/Snapshot/NotaSnapshot";
-import { ParteCuerpoSnapshot } from "src/Note/domain/Snapshot/ParteCuerpoSnapshot";
-import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
-import { Optional } from "src/Shared/utilities/Optional";
+import { NotaSnapshot } from "../../domain/Snapshot/NotaSnapshot";
+import { ParteCuerpoSnapshot } from "../../domain/Snapshot/ParteCuerpoSnapshot";
+import { TipoParteCuerpo } from "../../domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
+import { Optional } from "../../../Shared/utilities/Optional";
 import { ConvertidorCuerpo } from "./ConvertidorCuerpo";
-import { Either } from "src/Shared/utilities/Either";
-import { FechaActualizacionNotaExcepcion } from "src/Note/domain/excepciones/FechaActualizacionNotaExcepcion";
-import { FechaCreacionNotaExcepcion } from "src/Note/domain/excepciones/FechaCreacionNotaExcepcion";
-import { TituloNotaExcepcion } from "src/Note/domain/excepciones/TituloNotaExcepcion";
-import { IdNotaExcepcion } from "src/Note/domain/excepciones/IdNotaExcepcion";
-import { IdUserExcepcion } from "src/Note/domain/excepciones/IdUserException";
+import { Either } from "../../../Shared/utilities/Either";
+import { FechaActualizacionNotaExcepcion } from "../../domain/excepciones/FechaActualizacionNotaExcepcion";
+import { FechaCreacionNotaExcepcion } from "../../domain/excepciones/FechaCreacionNotaExcepcion";
+import { TituloNotaExcepcion } from "../../domain/excepciones/TituloNotaExcepcion";
+import { IdNotaExcepcion } from "../../domain/excepciones/IdNotaExcepcion";
+import { IdUserExcepcion } from "../../domain/excepciones/IdUserException";
 
 export class ConvertidorNota {
     static convertirASnapshot(notamodel:Document):Either<NotaSnapshot,Error>{

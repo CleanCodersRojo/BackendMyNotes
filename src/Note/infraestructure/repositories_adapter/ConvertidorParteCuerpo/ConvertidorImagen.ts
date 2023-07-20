@@ -1,8 +1,8 @@
-import { ParteCuerpoSnapshot } from "src/Note/domain/Snapshot/ParteCuerpoSnapshot";
+import { ParteCuerpoSnapshot } from "../../../domain/Snapshot/ParteCuerpoSnapshot";
 import { ConvertidorParteCuerpo } from "./ConvertidorParteCuerpo";
-import { ConstructorTextoPlanoCuerpo } from "src/Note/domain/fabrics/FabricaTexto/ConstructorTextoPlanoCuerpo";
+import { ConstructorTextoPlanoCuerpo } from "../../../domain/fabrics/FabricaTexto/ConstructorTextoPlanoCuerpo";
 import { Document } from "mongodb";
-import { ConstructorImagenCuerpo } from "src/Note/domain/fabrics/FabricaImagen/ConstructorImagenCuerpo";
+import { ConstructorImagenCuerpo } from "../../../domain/fabrics/FabricaImagen/ConstructorImagenCuerpo";
 
 export class ConvertidorImagen implements ConvertidorParteCuerpo{
     convertir(partemodel:Document):ParteCuerpoSnapshot{

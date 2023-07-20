@@ -1,6 +1,6 @@
-import { ParteCuerpoSnapshot } from "src/Note/domain/Snapshot/ParteCuerpoSnapshot";
+import { ParteCuerpoSnapshot } from "../../../domain/Snapshot/ParteCuerpoSnapshot";
 import { ConvertidorParteCuerpo } from "./ConvertidorParteCuerpo";
-import { ConstructorTextoPlanoCuerpo } from "src/Note/domain/fabrics/FabricaTexto/ConstructorTextoPlanoCuerpo";
+import { ConstructorTextoPlanoCuerpo } from "../../../domain/fabrics/FabricaTexto/ConstructorTextoPlanoCuerpo";
 import { Document } from "mongodb";
 
 export class ConvertidorTexto implements ConvertidorParteCuerpo{

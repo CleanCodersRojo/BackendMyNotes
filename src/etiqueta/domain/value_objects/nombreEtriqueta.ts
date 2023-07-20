@@ -1,10 +1,10 @@
 import { IValueObject } from "src/Shared/domain/IValueObject";
 
 export class NombreEtiqueta implements IValueObject{
-    private uuid:string = "";
+    private nombre:string = "";
 
-    constructor(id:string){
-        this.uuid = id;
+    constructor(nombre:string){
+        this.nombre = nombre;
     }
 
     public equals(other: NombreEtiqueta): boolean{
@@ -15,7 +15,7 @@ export class NombreEtiqueta implements IValueObject{
     }
 
     public getnombre():string{
-        return this.uuid;
+        return this.nombre;
     }
 
 }

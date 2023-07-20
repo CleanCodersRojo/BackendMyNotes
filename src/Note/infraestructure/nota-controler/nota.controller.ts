@@ -107,7 +107,7 @@ export class NotaController {
         }        
     }
 
-    @Get('/user/:id')
+   /*  @Get('/user/:id')
     async getNotesByUser(@Param('id') id, @Res({ passthrough: true }) res: Response){
         const query = new UserNotaQuery(id);
         const result = await this.queryHandler.query(query);
@@ -116,7 +116,7 @@ export class NotaController {
             return Either.makeRight<NotaSnapshot[],HttpException>(error);
         }
         return result;
-    }
+    } */
 
     @Get('/user/:id/titulo/:title')
     async getNotesByTitle(@Param('id') id, @Param('title') titulo){

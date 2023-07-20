@@ -1,4 +1,4 @@
-import { ILogger } from "src/Note/application/_decoradores/ILogger";
+import { ILogger } from "../../application/_decoradores/ILogger";
 import { logsModel } from "../schemas/log.schema";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";

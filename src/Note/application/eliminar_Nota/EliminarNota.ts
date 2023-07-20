@@ -1,13 +1,13 @@
-import { Either } from "src/Shared/utilities/Either";
+import { Either } from "../../../Shared/utilities/Either";
 import { IServicio } from "../../../Shared/application/Shared_Commands/IServicio";
 import { EliminarNotaComando } from "./EliminarNotaComando";
-import { Nota } from "src/Note/domain/Nota";
-import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
+import { Nota } from "../../domain/Nota";
+import { FabricaNota } from "../../domain/fabrics/FabricaNota";
 import { NotaSnapshot} from "../../domain/Snapshot/NotaSnapshot";
-import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
-import { Optional } from "src/Shared/utilities/Optional";
-import { IdNota } from "src/Note/domain/value_objects/IdNota";
-import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
+import { RepositorioNota } from "../../domain/repositories/RepositorioNota";
+import { Optional } from "../../../Shared/utilities/Optional";
+import { IdNota } from "../../domain/value_objects/IdNota";
+import { FabricaUser } from "../../../User/domain/fabrics/fabricaUser";
 import { NotFoundException } from "../_excepciones/NotFoundException";
 import { DeleteNotValidNoteException } from "../_excepciones/DeleteNotValidNoteException";
 

@@ -1,6 +1,6 @@
 
-import { AbstractException } from "src/Shared/domain/Shared_App_Exceptions/AbstractException";
-import { TipoError } from "src/Shared/domain/Shared_App_Exceptions/TipoErrorAplicacion";
+import { AbstractException } from "../../../Shared/domain/Shared_App_Exceptions/AbstractException";
+import { TipoError } from "../../../Shared/domain/Shared_App_Exceptions/TipoErrorAplicacion";
 
 export class DataBaseException extends AbstractException{
 
