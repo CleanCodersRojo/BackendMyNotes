@@ -1,7 +1,7 @@
-import { Optional } from "src/Shared/utilities/Optional";
+import { Optional } from "../../../Shared/utilities/Optional";
 import { TipoComando } from "../../../Shared/application/Shared_Enums/TipoComandoNotas";
 import { ICommand } from "../../../Shared/application/Shared_Commands/ICommand";
-import { ReceptorParteCuerpo } from "src/Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo";
+import { ReceptorParteCuerpo } from "../../../Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo";
 
 export class CrearNotaComando extends ICommand{
     titulo:string;

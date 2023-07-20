@@ -1,4 +1,3 @@
-import { ReceptorTextoCuerpo } from "src/Note/domain/fabrics/FabricaTexto/ReceptorTextoCuerpo";
 import { ValidacionParteCuerpo } from "./ValidacionParteCuerpo";
 import { Optional } from "src/Shared/utilities/Optional";
 import { TextoCuerpoDTO } from "../DTOs/ParteCuerpoDTO";

@@ -1,13 +1,13 @@
-import { Either } from "src/Shared/utilities/Either";
+import { Either } from "../../../Shared/utilities/Either";
 import { IServicio } from "../../../Shared/application/Shared_Commands/IServicio";
 import { ModificarNotaComando } from "./ModificarNotaComando";
-import { Nota } from "src/Note/domain/Nota";
-import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
+import { Nota } from "../../../Note/domain/Nota";
+import { FabricaNota } from "../../../Note/domain/fabrics/FabricaNota";
 import { NotaSnapshot} from "../../domain/Snapshot/NotaSnapshot";
-import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
-import { Optional } from "src/Shared/utilities/Optional";
-import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
-import { IdNota } from "src/Note/domain/value_objects/IdNota";
+import { RepositorioNota } from "../../../Note/domain/repositories/RepositorioNota";
+import { Optional } from "../../../Shared/utilities/Optional";
+import { FabricaUser } from "../../../User/domain/fabrics/fabricaUser";
+import { IdNota } from "../../../Note/domain/value_objects/IdNota";
 import { NotFoundException } from "../_excepciones/NotFoundException";
 
 export class ModificarNota implements IServicio<NotaSnapshot>{

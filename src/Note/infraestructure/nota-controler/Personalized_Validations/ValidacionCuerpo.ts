@@ -2,7 +2,6 @@ import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoPar
 import { ValidacionParteCuerpo } from "./ValidacionParteCuerpo";
 import { ValidacionImagen } from "./ValidacionImagen";
 import { ValidacionTexto } from "./ValidacionTexto";
-import { ReceptorParteCuerpo } from "src/Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo";
 import { ParteCuerpoDTO } from "../DTOs/ParteCuerpoDTO";
 
 export class ValidacionCuerpo {

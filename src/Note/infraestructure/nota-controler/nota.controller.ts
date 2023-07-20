@@ -36,7 +36,6 @@ import { CreacionNotaQuery } from 'src/Note/application/querys_Nota/buscarCreaci
 import { ActualizacionNotaQuery } from 'src/Note/application/querys_Nota/buscarActualizacion_Nota/ActualizacionNotaQuery';
 import { ExceptionHandler } from 'src/Shared/infraestructure/Shared_Inf_Exceptions/ExceptionHandler';
 import { ConstructorExceptionHandler } from 'src/Shared/infraestructure/Shared_Inf_Exceptions/ConstructorExceptionHandler';
-import { response } from 'express';
 import { MongoLogAdapter } from '../_decoradores_adapter/MongoLogAdapter';
 import { LogCommandDecorador } from 'src/Note/application/_decoradores/LogCommandDecorador';
 import { LogQueryDecorador } from 'src/Note/application/_decoradores/LogQueryDecorador';
@@ -97,8 +96,10 @@ export class NotaController {
     async getNoteById(@Param('idUser') iduser ,@Param('id') id){
         const query = new IdNotaQuery(iduser, id);
         const result = await this.queryHandler.query(query);
+        
         if (result.isRight()){
             const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            
             return Either.makeRight<NotaSnapshot[],HttpException>(error);
             //return Either.makeRight<NotaSnapshot[],HttpException>(error); 
         }
@@ -107,7 +108,7 @@ export class NotaController {
         }        
     }
 
-   /*  @Get('/user/:id')
+    @Get('/user/:id')
     async getNotesByUser(@Param('id') id, @Res({ passthrough: true }) res: Response){
         const query = new UserNotaQuery(id);
         const result = await this.queryHandler.query(query);
@@ -116,7 +117,7 @@ export class NotaController {
             return Either.makeRight<NotaSnapshot[],HttpException>(error);
         }
         return result;
-    } */
+    }
 
     @Get('/user/:id/titulo/:title')
     async getNotesByTitle(@Param('id') id, @Param('title') titulo){

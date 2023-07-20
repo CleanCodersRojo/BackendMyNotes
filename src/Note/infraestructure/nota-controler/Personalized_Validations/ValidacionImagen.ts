@@ -1,10 +1,7 @@
-import { ReceptorTextoCuerpo } from "src/Note/domain/fabrics/FabricaTexto/ReceptorTextoCuerpo";
 import { ValidacionParteCuerpo } from "./ValidacionParteCuerpo";
 import { Optional } from "src/Shared/utilities/Optional";
-import { ReceptorImagenCuerpo } from "src/Note/domain/fabrics/FabricaImagen/ReceptorImagenCuerpo";
 import { ImagenCuerpoDTO } from "../DTOs/ParteCuerpoDTO";
-import { isUint8Array } from "util/types";
-import { isNumber, isString } from "class-validator";
+import { isString } from "class-validator";
 
 export class ValidacionImagen implements ValidacionParteCuerpo{
     public esValido(parte:ImagenCuerpoDTO):boolean{

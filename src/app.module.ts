@@ -18,9 +18,7 @@ import { MongoLogAdapter } from './Note/infraestructure/_decoradores_adapter/Mon
     schema:notasSchema
    }]),MongooseModule.forFeature([{name:"Log",
     schema:logsSchema
-   }]),MongooseModule.forFeature([{name:User.name,
-   schema:UserSchema
-  }]) 
+   }])
   ],
   controllers: [NotaController],
   providers: [MongoNotaAdapter, MongoLogAdapter],

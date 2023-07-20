@@ -1,8 +1,8 @@
-import { CommandBaseDecorator } from "src/Shared/application/Shared_Commands/CommandBaseDecorator";
+import { CommandBaseDecorator } from "../../../Shared/application/Shared_Commands/CommandBaseDecorator";
 import { ILogger } from "./ILogger";
-import { IServicio } from "src/Shared/application/Shared_Commands/IServicio";
-import { ICommand } from "src/Shared/application/Shared_Commands/ICommand";
-import { Either } from "src/Shared/utilities/Either";
+import { IServicio } from "../../../Shared/application/Shared_Commands/IServicio";
+import { ICommand } from "../../../Shared/application/Shared_Commands/ICommand";
+import { Either } from "../../../Shared/utilities/Either";
 
 export class LogCommandDecorador<TView> extends CommandBaseDecorator<TView>{
     private logger:ILogger;

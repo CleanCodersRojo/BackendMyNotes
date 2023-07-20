@@ -1,8 +1,8 @@
-import { QueryBaseDecorator } from "src/Shared/application/Shared_Querys/QueryBaseDecorator";
+import { QueryBaseDecorator } from "../../../Shared/application/Shared_Querys/QueryBaseDecorator";
 import { ILogger } from "./ILogger";
-import { IServicioQuery } from "src/Shared/application/Shared_Querys/IServicioQuery";
-import { IQuery } from "src/Shared/application/Shared_Querys/IQuery";
-import { Either } from "src/Shared/utilities/Either";
+import { IServicioQuery } from "../../../Shared/application/Shared_Querys/IServicioQuery";
+import { IQuery } from "../../../Shared/application/Shared_Querys/IQuery";
+import { Either } from "../../../Shared/utilities/Either";
 
 export class LogQueryDecorador<TView> extends QueryBaseDecorator<TView>{
     logger:ILogger;

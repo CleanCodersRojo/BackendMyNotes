@@ -1,4 +1,3 @@
-import { ReceptorParteCuerpo } from "src/Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo";
 import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { Optional } from "src/Shared/utilities/Optional";
 import { ValidacionCuerpo } from "./Personalized_Validations/ValidacionCuerpo";

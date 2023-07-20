@@ -5,7 +5,7 @@ import { Either } from '../../../Shared/utilities/Either';
 import { Optional } from '../../../Shared/utilities/Optional';
 import { NotaSnapshot } from '../../domain/Snapshot/NotaSnapshot';
 import { IdNota } from '../../domain/value_objects/IdNota';
-import { InjectModel, Schema } from '@nestjs/mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 import { ConvertidorNota } from './ConvertidorNota';
 import { IdUser } from '../../../User/domain/value_objects/IdUser';
 import { ParteCuerpoSnapshot } from '../../domain/Snapshot/ParteCuerpoSnapshot';

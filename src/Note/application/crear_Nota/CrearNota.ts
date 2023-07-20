@@ -1,11 +1,11 @@
-import { Either } from "src/Shared/utilities/Either";
+import { Either } from "../../../Shared/utilities/Either";
 import { IServicio } from "../../../Shared/application/Shared_Commands/IServicio";
 import { CrearNotaComando } from "./CrearNotaComando";
 import { IGeneradorUUID } from '../../../Shared/application/Shared_Commands/IGeneradorUUID';
-import { Nota } from "src/Note/domain/Nota";
-import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
+import { Nota } from "../../../Note/domain/Nota";
+import { FabricaNota } from "../../../Note/domain/fabrics/FabricaNota";
 import { NotaSnapshot} from "../../domain/Snapshot/NotaSnapshot";
-import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
+import { RepositorioNota } from "../../../Note/domain/repositories/RepositorioNota";
 
 export class CrearNota implements IServicio<NotaSnapshot>{
     private readonly generadorUUID:IGeneradorUUID;

@@ -1,6 +1,5 @@
 import { ParteCuerpoSnapshot } from "../../../domain/Snapshot/ParteCuerpoSnapshot";
 import { ConvertidorParteCuerpo } from "./ConvertidorParteCuerpo";
-import { ConstructorTextoPlanoCuerpo } from "../../../domain/fabrics/FabricaTexto/ConstructorTextoPlanoCuerpo";
 import { Document } from "mongodb";
 import { ConstructorImagenCuerpo } from "../../../domain/fabrics/FabricaImagen/ConstructorImagenCuerpo";
 

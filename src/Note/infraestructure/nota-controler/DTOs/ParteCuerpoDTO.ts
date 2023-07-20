@@ -1,5 +1,4 @@
-import { IsArray, IsNumber, IsString, Validate } from "class-validator";
-import { isUint8Array } from "util/types";
+import { IsArray, IsString} from "class-validator";
 
 export class ParteCuerpoDTO{
     @IsString()
