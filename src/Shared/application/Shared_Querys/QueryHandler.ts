@@ -4,21 +4,21 @@ import { IQuery } from "./IQuery";
 import { TipoQuery } from "../Shared_Enums/TipoQueryNotas";
 
 export class QueryHandler<TView>{
-    private comandos:Map<TipoQuery, IServicioQuery<TView>>;
+    private queries:Map<TipoQuery, IServicioQuery<TView>>;
 
     constructor(){
-        this.comandos = new Map();
+        this.queries = new Map();
     }
 
     public query(dto:IQuery):Promise<Either<TView,Error>>{
-        for (let key of this.comandos.keys()) {
+        for (let key of this.queries.keys()) {
             if (dto.getType() == key){
-                return this.comandos.get(key).query(dto);
+                return this.queries.get(key).query(dto);
             }
         }
     }
 
-    addComando(comando:IServicioQuery<TView>, tipo:TipoQuery){
-        this.comandos.set(tipo, comando);
+    addQuery(comando:IServicioQuery<TView>, tipo:TipoQuery){
+        this.queries.set(tipo, comando);
     }
 }

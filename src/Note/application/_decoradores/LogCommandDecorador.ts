@@ -5,7 +5,7 @@ import { ICommand } from "src/Shared/application/Shared_Commands/ICommand";
 import { Either } from "src/Shared/utilities/Either";
 
 export class LogCommandDecorador<TView> extends CommandBaseDecorator<TView>{
-    logger:ILogger;
+    private logger:ILogger;
 
     constructor(service:IServicio<TView>, logger:ILogger){
         super(service);

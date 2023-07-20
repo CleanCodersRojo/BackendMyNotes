@@ -1,8 +1,6 @@
 import { Optional } from "src/Shared/utilities/Optional";
 import { TipoComando } from "../../../Shared/application/Shared_Enums/TipoComandoNotas";
 import { ICommand } from "../../../Shared/application/Shared_Commands/ICommand";
-import { TipoParteCuerpo } from "src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo";
-import { ParteCuerpoSnapshot } from "src/Note/domain/Snapshot/ParteCuerpoSnapshot";
 import { ReceptorParteCuerpo } from "src/Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo";
 
 export class ModificarNotaComando extends ICommand{

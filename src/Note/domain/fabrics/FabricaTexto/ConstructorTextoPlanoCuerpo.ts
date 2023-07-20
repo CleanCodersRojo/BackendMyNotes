@@ -1,9 +1,6 @@
-import { ParteCuerpoSnapshot } from "../../Snapshot/ParteCuerpoSnapshot";
 import { TextoPlanoSnapshot } from "../../Snapshot/TextoPlanoSnapshot";
-import { EnumAlineacionTexto } from "../../value_objects/Cuerpo_VO/EnumAlineacionTexto";
 import { ParteCuerpo } from "../../value_objects/Cuerpo_VO/ParteCuerpo";
 import { TextoPlanoCuerpo } from "../../value_objects/Cuerpo_VO/TextoPlanoCuerpo";
-import { TipoParteCuerpo } from "../../value_objects/Cuerpo_VO/TipoParteCuerpo";
 import { ReceptorTextoCuerpo } from "./ReceptorTextoCuerpo";
 import { ConstructorParteCuerpo } from "../Shared_ParteCuerpo/ConstructorParteCuerpo";
 

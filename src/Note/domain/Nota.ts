@@ -6,8 +6,8 @@ import {FechaNota} from "src/Note/domain/value_objects/FechaNota";
 import { IdUser } from "src/User/domain/value_objects/IdUser";
 import { UbicacionNota } from './value_objects/UbicacionNota';
 import { NotaSnapshot } from "./Snapshot/NotaSnapshot";
-import { EliminacionYaExisteExcepcion } from "./excepciones/EliminacionYaExiste";
-import { UbicacionYaExisteExcepcion } from "./excepciones/UbicacionYaExiste";
+import { EliminacionYaExisteExcepcion } from "./excepciones/EliminacionYaExisteExcepcion";
+import { UbicacionYaExisteExcepcion } from "./excepciones/UbicacionYaExisteExcepcion";
 
 export class Nota {
     private notaId:IdNota;

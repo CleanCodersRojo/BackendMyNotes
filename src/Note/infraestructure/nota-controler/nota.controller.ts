@@ -70,27 +70,27 @@ export class NotaController {
         /*QUERIES */
         const servicioBuscarIdNota:IServicioQuery<NotaSnapshot[]> = new IdNotaQueryService(adapter);
         const queryDecorator1:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarIdNota, loggerAdapter);
-        this.queryHandler.addComando(queryDecorator1, TipoQuery.idNota);
+        this.queryHandler.addQuery(queryDecorator1, TipoQuery.idNota);
 
         const servicioBuscarTituloNota:IServicioQuery<NotaSnapshot[]> = new TituloNotaQueryService(adapter);
         const queryDecorator2:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarTituloNota, loggerAdapter);
-        this.queryHandler.addComando(queryDecorator2, TipoQuery.titulo);
+        this.queryHandler.addQuery(queryDecorator2, TipoQuery.titulo);
 
         const servicioBuscarCuerpoNota:IServicioQuery<NotaSnapshot[]> = new CuerpoNotaQueryService(adapter);
         const queryDecorator3:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarCuerpoNota, loggerAdapter);
-        this.queryHandler.addComando(queryDecorator3, TipoQuery.cuerpo);
+        this.queryHandler.addQuery(queryDecorator3, TipoQuery.cuerpo);
 
         const servicioBuscarCreacionNota:IServicioQuery<NotaSnapshot[]> = new CreacionNotaQueryService(adapter);
         const queryDecorator4:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarCreacionNota, loggerAdapter);
-        this.queryHandler.addComando(queryDecorator4, TipoQuery.fechaCreacion);
+        this.queryHandler.addQuery(queryDecorator4, TipoQuery.fechaCreacion);
 
         const servicioBuscarActualizacionNota:IServicioQuery<NotaSnapshot[]> = new ActualizacionNotaQueryService(adapter);
         const queryDecorator5:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarActualizacionNota, loggerAdapter);
-        this.queryHandler.addComando(queryDecorator5, TipoQuery.fechaActualizacion);
+        this.queryHandler.addQuery(queryDecorator5, TipoQuery.fechaActualizacion);
 
         const servicioBuscarUserNota:IServicioQuery<NotaSnapshot[]> = new UserNotaQueryService(adapter);
         const queryDecorator6:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarUserNota, loggerAdapter);
-        this.queryHandler.addComando(queryDecorator6, TipoQuery.user);
+        this.queryHandler.addQuery(queryDecorator6, TipoQuery.user);
     }
 
     @Get('/:id/user/:idUser/')
