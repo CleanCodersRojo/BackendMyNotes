@@ -109,7 +109,7 @@ export class NotaController {
     }
 
     @Get('/user/:id')
-    async getNotesByUser(@Param('id') id, @Res({ passthrough: true }) res: Response){
+    async getNotesByUser(@Param('id') id){
         const query = new UserNotaQuery(id);
         const result = await this.queryHandler.query(query);
         if (result.isRight()){

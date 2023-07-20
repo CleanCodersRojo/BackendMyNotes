@@ -7,7 +7,6 @@ export class CrearNotaDTO{
     titulo:string;
     @IsArray() 
     @ValidateNested({each: true})
-    //@Type(() => ParteCuerpoDTO)
     cuerpo:Array<ParteCuerpoDTO>;
     @IsDateString()
     fechaCreacion:Date;
