@@ -1,3 +1,6 @@
+Diagrama de Arquitectura Hexagonal
+![MODELO DE DOMINIO - Página 2](https://github.com/CleanCodersRojo/BackendMyNotes/assets/74473129/c73f9510-a19b-4693-8f41-e5c59ce41aa6)
+
 ## Installation
 
 ```bash
