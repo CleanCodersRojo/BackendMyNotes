@@ -14,12 +14,14 @@ export class MongoEtiquetaRepository implements RepositorioEtiqueta {
    async  buscarEtiquetaPorId(id: IdEtiqueta): Promise<Either<Optional<EtiquetaSnapshot >, Error>> {
         try{
             const data = await this.etiquetamodel.find({id:id})
-
+            let vistaEtiqueta:EtiquetaSnapshot 
             for (const etiquetajson of data){
                 let  etiqueta:Etiqueta =FabricaEtiqueta.fabricar(etiquetajson.Id, etiquetajson.nombre,);
-                const vistaEtiqueta:EtiquetaSnapshot = etiqueta.guardar();
+                const vista:EtiquetaSnapshot = etiqueta.guardar();
+                vistaEtiqueta=vista
             }
-           
+
+        
             return Promise.resolve(Either.makeLeft<Optional<EtiquetaSnapshot >,Error>(new Optional<EtiquetaSnapshot >(vistaEtiqueta)));
         } catch (e) {
             return Promise.resolve(Either.makeRight<Optional<EtiquetaSnapshot >, Error>(e))
@@ -36,4 +38,4 @@ export class MongoEtiquetaRepository implements RepositorioEtiqueta {
     }
     
 }
-     */
+      */

@@ -1,12 +1,16 @@
-import { Optional } from "src/Shared/utilities/Optional";
+import { Optional } from "../../../Shared/utilities/Optional";
 import { IdNota } from "../value_objects/IdNota";
 import { TituloNota } from "../value_objects/TituloNota";
 import { CuerpoNota } from "../value_objects/CuerpoNota";
 import { FechaNota } from "../value_objects/FechaNota";
 import { UbicacionNota } from '../value_objects/UbicacionNota';
-import { IdUser } from "src/User/domain/value_objects/IdUser";
-import { TipoParteCuerpo } from "../value_objects/Cuerpo_VO/TipoParteCuerpo";
+import { IdUser } from "../../../User/domain/value_objects/IdUser";
 import { ParteCuerpoSnapshot } from "./ParteCuerpoSnapshot";
+import { IdNotaExcepcion } from "../excepciones/IdNotaExcepcion";
+import { TituloNotaExcepcion } from "../excepciones/TituloNotaExcepcion";
+import { FechaCreacionNotaExcepcion } from "../excepciones/FechaCreacionNotaExcepcion";
+import { FechaActualizacionNotaExcepcion } from "../excepciones/FechaActualizacionNotaExcepcion";
+import { IdUserExcepcion } from "../excepciones/IdUserException";
 
 export class NotaSnapshot{
     notaId:string;
@@ -21,6 +25,7 @@ export class NotaSnapshot{
 
     constructor(id:string, titulo:string, cuerpo:Array<ParteCuerpoSnapshot>, fechaCreacion:Date, fechaEliminacion:Optional<Date>, 
         fechaActualizacion:Date, latitud:Optional<number>, altitud:Optional<number>, usuarioId:string){
+        
         this.notaId = id;
         this.titulo = titulo;
         this.cuerpo = cuerpo;

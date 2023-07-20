@@ -1,5 +1,5 @@
-import { Optional } from "src/Shared/utilities/Optional";
-import { IdUser } from "src/User/domain/value_objects/IdUser";
+
+import { IdUser } from "../../domain/value_objects/IdUser";
 import { UserName } from "../value_objects/UserName";
 import { UserEmail } from "../value_objects/UserEmail";
 import { UserBornDate } from "../value_objects/UserBornDate";
@@ -16,5 +16,9 @@ export class FabricaUser {
         const fc:UserBornDate = new UserBornDate(bornDate);
     
         return new User(i,n,e,fc,p);
+    }
+
+    static fabricarIdUser(id:string):IdUser{
+        return new IdUser(id);
     }
 }

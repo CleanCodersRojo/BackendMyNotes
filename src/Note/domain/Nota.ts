@@ -1,9 +1,9 @@
-import { Optional } from "src/Shared/utilities/Optional";
-import {IdNota} from "src/Note/domain/value_objects/IdNota";
-import {CuerpoNota} from "src/Note/domain/value_objects/CuerpoNota";
-import {TituloNota} from "src/Note/domain/value_objects/TituloNota";
-import {FechaNota} from "src/Note/domain/value_objects/FechaNota";
-import { IdUser } from "src/User/domain/value_objects/IdUser";
+import { Optional } from "../../Shared/utilities/Optional";
+import {IdNota} from "../../Note/domain/value_objects/IdNota";
+import {CuerpoNota} from "../../Note/domain/value_objects/CuerpoNota";
+import {TituloNota} from "../../Note/domain/value_objects/TituloNota";
+import {FechaNota} from "../../Note/domain/value_objects/FechaNota";
+import { IdUser } from "../../User/domain/value_objects/IdUser";
 import { UbicacionNota } from './value_objects/UbicacionNota';
 import { NotaSnapshot } from "./Snapshot/NotaSnapshot";
 

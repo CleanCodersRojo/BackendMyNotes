@@ -15,10 +15,6 @@ export class FabricaCuerpo {
         this.constructores.set(TipoParteCuerpo.textoPlano,new ConstructorTextoPlanoCuerpo());
     }
 
-    /*public addConstructor(t:TipoParteCuerpo, c:ConstructorParteCuerpo){
-        this.constructores.set(t,c);
-    }*/
-
     public fabricar(parte:ReceptorParteCuerpo):ParteCuerpo{
         for (let key of this.constructores.keys()) {
             if (parte.tipo == key.valueOf()){

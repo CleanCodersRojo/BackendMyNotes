@@ -1,7 +1,5 @@
-import { IValueObject } from "src/Shared/domain/IValueObject";
 import { TipoParteCuerpo } from "./TipoParteCuerpo";
 import { ParteCuerpo } from "./ParteCuerpo";
-import { EnumAlineacionTexto } from "./EnumAlineacionTexto";
 import { TextoPlanoSnapshot } from "../../Snapshot/TextoPlanoSnapshot";
 import { ConstructorTextoPlanoCuerpo } from "../../fabrics/FabricaTexto/ConstructorTextoPlanoCuerpo";
 

@@ -10,15 +10,15 @@ import { ConstructorParteCuerpo } from "../Shared_ParteCuerpo/ConstructorParteCu
 export class ConstructorImagenCuerpo implements ConstructorParteCuerpo{
     
     fabricar(parte:ReceptorImagenCuerpo):ParteCuerpo{
-        return new ImagenCuerpo(parte.bytes);
+        return new ImagenCuerpo(parte.url);
     }
 
     restaurar(parte:ImagenSnapshot):ParteCuerpo{
-        return new ImagenCuerpo(parte.bytes/*, parte.size, parte.color, parte.alineacion*/);
+        return new ImagenCuerpo(parte.url/*, parte.size, parte.color, parte.alineacion*/);
     }
 
-    public newSnapshot(bytes:Uint8Array):ImagenSnapshot{
-        return new ImagenSnapshot(bytes);
+    public newSnapshot(url:string):ImagenSnapshot{
+        return new ImagenSnapshot(url);
     }
 
 }

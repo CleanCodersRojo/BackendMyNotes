@@ -15,5 +15,5 @@ export class TextoCuerpoDTO extends ParteCuerpoDTO{
 
 export class ImagenCuerpoDTO extends ParteCuerpoDTO{
     @IsArray() //@Validate(BodyPartType)
-    bytes:Uint8Array;
+    url:string;
 }

@@ -1,4 +1,4 @@
-import { Optional } from "src/Shared/utilities/Optional";
+import { Optional } from "../../../Shared/utilities/Optional";
 import { Nota } from "../Nota";
 import { NotaSnapshot } from "../Snapshot/NotaSnapshot";
 import { CuerpoNota } from "../value_objects/CuerpoNota";
@@ -6,13 +6,10 @@ import { FechaNota } from "../value_objects/FechaNota";
 import { IdNota } from "../value_objects/IdNota";
 import { TituloNota } from "../value_objects/TituloNota";
 import { UbicacionNota } from "../value_objects/UbicacionNota";
-import { IdUser } from "src/User/domain/value_objects/IdUser";
+import { IdUser } from "../../../User/domain/value_objects/IdUser";
 import { ParteCuerpoSnapshot } from "../Snapshot/ParteCuerpoSnapshot";
 import { ParteCuerpo } from "../value_objects/Cuerpo_VO/ParteCuerpo";
 import { FabricaCuerpo } from "./Shared_ParteCuerpo/FabricaCuerpo";
-import { TipoParteCuerpo } from "../value_objects/Cuerpo_VO/TipoParteCuerpo";
-import { ConstructorImagenCuerpo } from "./FabricaImagen/ConstructorImagenCuerpo";
-import { ConstructorTextoPlanoCuerpo } from "./FabricaTexto/ConstructorTextoPlanoCuerpo";
 
 export class FabricaRestaurarNota {
     static restaurarNota(snapshot:NotaSnapshot):Nota{
@@ -49,8 +46,6 @@ export class FabricaRestaurarNota {
         let fabrica:FabricaCuerpo = new FabricaCuerpo();
         
         for (const parte of cuerpo){
-            
-            console.log(parte);
             let p:ParteCuerpo = fabrica.restaurar(parte);
             nuevocuerpo.push(p);
         }

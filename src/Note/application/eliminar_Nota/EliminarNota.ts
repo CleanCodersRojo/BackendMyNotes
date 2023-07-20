@@ -1,12 +1,15 @@
-import { Either } from "src/Shared/utilities/Either";
+import { Either } from "../../../Shared/utilities/Either";
 import { IServicio } from "../../../Shared/application/Shared_Commands/IServicio";
 import { EliminarNotaComando } from "./EliminarNotaComando";
-import { Nota } from "src/Note/domain/Nota";
-import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
+import { Nota } from "../../domain/Nota";
+import { FabricaNota } from "../../domain/fabrics/FabricaNota";
 import { NotaSnapshot} from "../../domain/Snapshot/NotaSnapshot";
-import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
-import { Optional } from "src/Shared/utilities/Optional";
-import { IdNota } from "src/Note/domain/value_objects/IdNota";
+import { RepositorioNota } from "../../domain/repositories/RepositorioNota";
+import { Optional } from "../../../Shared/utilities/Optional";
+import { IdNota } from "../../domain/value_objects/IdNota";
+import { FabricaUser } from "../../../User/domain/fabrics/fabricaUser";
+import { NotFoundException } from "../_excepciones/NotFoundException";
+import { DeleteNotValidNoteException } from "../_excepciones/DeleteNotValidNoteException";
 
 export class EliminarNota implements IServicio<NotaSnapshot>{
     private readonly repositorio:RepositorioNota;
@@ -18,33 +21,42 @@ export class EliminarNota implements IServicio<NotaSnapshot>{
     public async execute(cmd:EliminarNotaComando):Promise<Either<NotaSnapshot, Error>>{
         //Buscar la nota primero de la base de datos
         let nota:Nota;
-        const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaNota.fabricarIdNota(cmd.id));
+        let notaEliminada:NotaSnapshot
+        const idNota:IdNota = FabricaNota.fabricarIdNota(cmd.id);
+        let errorWait:Optional<Either<NotaSnapshot, Error>> = new Optional<Either<NotaSnapshot, Error>>();
+
+
+        const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaUser.fabricarIdUser(cmd.usuarioId)
+                                                                                        ,idNota);
         
         //MANEJO DE EITHER Y OPTIONAL
         if (v1.isLeft()){
             const v2:Optional<Nota> = v1.getLeft();
             if (v2.HasValue()){
                 nota = v2.getValue();
+                //Snapshot de retorno de la nota a eliminar
+                notaEliminada = nota.getSnapshot();
             }
             else {
                 //Error de Nota no encontrada
-                return Either.makeRight<NotaSnapshot, Error>(new Error());
+                return Either.makeRight<NotaSnapshot, Error>(new NotFoundException(idNota));
             }
         }
         else {
-            return Either.makeRight<NotaSnapshot, Error>(v1.getRight());
+            errorWait = new Optional<Either<NotaSnapshot, Error>>(   Either.makeRight<NotaSnapshot, Error>(v1.getRight())   );
         }
         
-        //Snapshot de retorno de la nota a eliminar
-        const notaEliminada:NotaSnapshot = nota.getSnapshot();
-
         //Eliminar Nota de la base de datos
-        const idEliminado:Either<Optional<IdNota>, Error> = await this.repositorio.eliminarNota(FabricaNota.fabricarIdNota(cmd.id));
+        const idEliminado:Either<Optional<IdNota>, Error> = await this.repositorio.eliminarNota(idNota);
         
         //MANEJO DE EITHER Y OPTIONAL
         if(idEliminado.isLeft()){
             if (idEliminado.getLeft().HasValue()){
-                return Either.makeLeft<NotaSnapshot, Error>(notaEliminada);
+                if (errorWait.HasValue()){
+                    return Either.makeRight<NotaSnapshot, Error>(new DeleteNotValidNoteException(idEliminado.getLeft().getValue()));
+                }else{
+                    return Either.makeLeft<NotaSnapshot, Error>(notaEliminada);
+                }
             }
             else{
                 //Error de Nota no encontrada
@@ -52,6 +64,9 @@ export class EliminarNota implements IServicio<NotaSnapshot>{
             }
         }
         else {
+            if (errorWait.HasValue()){
+                return errorWait.getValue();
+            }
             return Either.makeRight<NotaSnapshot, Error>(idEliminado.getRight());
         }
     }

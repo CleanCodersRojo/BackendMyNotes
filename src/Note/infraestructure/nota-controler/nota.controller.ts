@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Catch, Controller, Delete, Get, HttpException, Param, Patch, Post, Res, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CrearNotaComando } from 'src/Note/application/crear_Nota/CrearNotaComando';
 import { CrearNotaDTO } from './DTOs/CrearNotaDTO';
 import { CommandHandler } from '../../../Shared/application/Shared_Commands/CommandHandler';
-import { TipoComando } from 'src/Shared/application/Shared_Commands/TipoComandoNotas';
+import { TipoComando } from 'src/Shared/application/Shared_Enums/TipoComandoNotas';
 import { IServicio } from 'src/Shared/application/Shared_Commands/IServicio';
 import { CrearNota } from 'src/Note/application/crear_Nota/CrearNota';
 import { GeneradorUUID } from '../UUID/GeneradorUUID';
@@ -12,72 +12,164 @@ import { NotaSnapshot } from 'src/Note/domain/Snapshot/NotaSnapshot';
 import { EliminarNota } from 'src/Note/application/eliminar_Nota/EliminarNota';
 import { EliminarNotaDTO } from './DTOs/EliminarNotaDTO';
 import { EliminarNotaComando } from '../../application/eliminar_Nota/EliminarNotaComando';
-import { IdNota } from 'src/Note/domain/value_objects/IdNota';
 import { MongoNotaAdapter } from '../repositories_adapter/MongoNotaAdapter';
 import { ModificarNotaDTO } from './DTOs/ModificarNotaDTO';
 import { ModificarNota } from 'src/Note/application/modificar_Nota/ModificarNota';
 import { ModificarNotaComando } from 'src/Note/application/modificar_Nota/ModificarNotaComando';
-import { IdUser } from 'src/User/domain/value_objects/IdUser';
-import { Nota } from 'src/Note/domain/Nota';
-import { ParteCuerpoSnapshot } from 'src/Note/domain/Snapshot/ParteCuerpoSnapshot';
 import { ReceptorParteCuerpo } from 'src/Note/domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo';
-import { ImagenCuerpoDTO, ParteCuerpoDTO, TextoCuerpoDTO } from './DTOs/ParteCuerpoDTO';
-import { TipoParteCuerpo } from 'src/Note/domain/value_objects/Cuerpo_VO/TipoParteCuerpo';
-import { ReceptorTextoCuerpo } from 'src/Note/domain/fabrics/FabricaTexto/ReceptorTextoCuerpo';
-import { ReceptorImagenCuerpo } from 'src/Note/domain/fabrics/FabricaImagen/ReceptorImagenCuerpo';
+import { ParteCuerpoDTO} from './DTOs/ParteCuerpoDTO';
 import { ParteCuerpoValidacion } from './ParteCuerpoValidacion';
+import { QueryHandler } from 'src/Shared/application/Shared_Querys/QueryHandler';
+import { IServicioQuery } from 'src/Shared/application/Shared_Querys/IServicioQuery';
+import { IdNotaQueryService } from 'src/Note/application/querys_Nota/buscarId_Nota/IdNotaQueryService';
+import { ActualizacionNotaQueryService} from 'src/Note/application/querys_Nota/buscarActualizacion_Nota/ActualizacionNotaQueryService';
+import { CreacionNotaQueryService } from 'src/Note/application/querys_Nota/buscarCreacion_Nota/CreacionNotaQueryService';
+import { TituloNotaQueryService } from 'src/Note/application/querys_Nota/buscarTitulo_Nota/TituloNotaQueryService';
+import { CuerpoNotaQueryService } from 'src/Note/application/querys_Nota/buscarCuerpo_Nota/CuerpoNotaQueryService';
+import { UserNotaQueryService } from 'src/Note/application/querys_Nota/buscarUser_Nota/UserNotaQueryService';
+import { TipoQuery } from 'src/Shared/application/Shared_Enums/TipoQueryNotas';
+import { IdNotaQuery } from 'src/Note/application/querys_Nota/buscarId_Nota/IdNotaQuery';
+import { UserNotaQuery } from 'src/Note/application/querys_Nota/buscarUser_Nota/UserNotaQuery';
+import { TituloNotaQuery } from 'src/Note/application/querys_Nota/buscarTitulo_Nota/TituloNotaQuery';
+import { CuerpoNotaQuery } from 'src/Note/application/querys_Nota/buscarCuerpo_Nota/CuerpoNotaQuery';
+import { CreacionNotaQuery } from 'src/Note/application/querys_Nota/buscarCreacion_Nota/CreacionNotaQuery';
+import { ActualizacionNotaQuery } from 'src/Note/application/querys_Nota/buscarActualizacion_Nota/ActualizacionNotaQuery';
+import { ExceptionHandler } from 'src/Shared/infraestructure/Shared_Inf_Exceptions/ExceptionHandler';
+import { ConstructorExceptionHandler } from 'src/Shared/infraestructure/Shared_Inf_Exceptions/ConstructorExceptionHandler';
+import { AbstractException } from 'src/Shared/application/Shared_App_Exceptions/AbstractException';
+import { response } from 'express';
+import { MongoLogAdapter } from '../_decoradores_adapter/MongoLogAdapter';
+import { LogCommandDecorador } from 'src/Note/application/_decoradores/LogCommandDecorador';
+import { LogQueryDecorador } from 'src/Note/application/_decoradores/LogQueryDecorador';
 
 @Controller('nota')
 export class NotaController {
-    private commandHandler:CommandHandler<NotaSnapshot> = new CommandHandler();
+    private commandHandler:CommandHandler<NotaSnapshot> = new CommandHandler<NotaSnapshot>();
+    private queryHandler:QueryHandler<NotaSnapshot[]> = new QueryHandler<NotaSnapshot[]>();
+    private errorHandler:ExceptionHandler;
 
-    constructor(private adapter: MongoNotaAdapter){
+    constructor(private adapter: MongoNotaAdapter, private loggerAdapter: MongoLogAdapter){
+        /*CONSTRUCCION DEL EXCEPTION HANDLER*/
+        this.errorHandler = ConstructorExceptionHandler.construir();
+
         /*INYECCION DE DEPENDENCIAS*/
+        /*COMMANDS */
         const servicioCrearNota:IServicio<NotaSnapshot> = new CrearNota(new GeneradorUUID(), adapter);
-        this.commandHandler.addComando(servicioCrearNota, TipoComando.CrearNota);
+        const serviceDecorator1:LogCommandDecorador<NotaSnapshot> = new LogCommandDecorador(servicioCrearNota, loggerAdapter);
+        this.commandHandler.addComando(serviceDecorator1, TipoComando.CrearNota);
 
         const servicioEliminarNota:IServicio<NotaSnapshot> = new EliminarNota(adapter);
-        this.commandHandler.addComando(servicioEliminarNota, TipoComando.EliminarNota);
+        const serviceDecorator2:LogCommandDecorador<NotaSnapshot> = new LogCommandDecorador(servicioEliminarNota, loggerAdapter);
+        this.commandHandler.addComando(serviceDecorator2, TipoComando.EliminarNota);
 
         const servicioModificarNota:IServicio<NotaSnapshot> = new ModificarNota(adapter);
-        this.commandHandler.addComando(servicioModificarNota, TipoComando.ModificarNota);
+        const serviceDecorator3:LogCommandDecorador<NotaSnapshot> = new LogCommandDecorador(servicioModificarNota, loggerAdapter);
+        this.commandHandler.addComando(serviceDecorator3, TipoComando.ModificarNota);
+
+
+        /*QUERIES */
+        const servicioBuscarIdNota:IServicioQuery<NotaSnapshot[]> = new IdNotaQueryService(adapter);
+        const queryDecorator1:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarIdNota, loggerAdapter);
+        this.queryHandler.addComando(queryDecorator1, TipoQuery.idNota);
+
+        const servicioBuscarTituloNota:IServicioQuery<NotaSnapshot[]> = new TituloNotaQueryService(adapter);
+        const queryDecorator2:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarTituloNota, loggerAdapter);
+        this.queryHandler.addComando(queryDecorator2, TipoQuery.titulo);
+
+        const servicioBuscarCuerpoNota:IServicioQuery<NotaSnapshot[]> = new CuerpoNotaQueryService(adapter);
+        const queryDecorator3:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarCuerpoNota, loggerAdapter);
+        this.queryHandler.addComando(queryDecorator3, TipoQuery.cuerpo);
+
+        const servicioBuscarCreacionNota:IServicioQuery<NotaSnapshot[]> = new CreacionNotaQueryService(adapter);
+        const queryDecorator4:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarCreacionNota, loggerAdapter);
+        this.queryHandler.addComando(queryDecorator4, TipoQuery.fechaCreacion);
+
+        const servicioBuscarActualizacionNota:IServicioQuery<NotaSnapshot[]> = new ActualizacionNotaQueryService(adapter);
+        const queryDecorator5:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarActualizacionNota, loggerAdapter);
+        this.queryHandler.addComando(queryDecorator5, TipoQuery.fechaActualizacion);
+
+        const servicioBuscarUserNota:IServicioQuery<NotaSnapshot[]> = new UserNotaQueryService(adapter);
+        const queryDecorator6:LogQueryDecorador<NotaSnapshot[]> = new LogQueryDecorador(servicioBuscarUserNota, loggerAdapter);
+        this.queryHandler.addComando(queryDecorator6, TipoQuery.user);
     }
 
-    @Get(':id')
-    async getNoteById(@Param('id') id){
-        const nota:Either<Optional<Nota>, Error> = await this.adapter.buscarNotaPorId(new IdNota(id));
-        if (nota.isLeft()){
-            if (nota.getLeft().HasValue())
-                return Either.makeLeft<Optional<NotaSnapshot>, Error>(new Optional<NotaSnapshot>(nota.getLeft().getValue().getSnapshot()));
-            else
-                return Either.makeLeft<Optional<NotaSnapshot>, Error>(new Optional<NotaSnapshot>());
-        }
-        else {
-            return Either.makeRight<Optional<NotaSnapshot>, Error>(nota.getRight());
-        }
-        
-    }
-
-    @Get('/byUser/:id')
-    async getNotesByUser(@Param('id') id){
-        const notas:Either<Optional<Nota[]>, Error> = await this.adapter.buscarNotasPorUsuario(new IdUser(id));
-
-        if (notas.isLeft()){
-            if (notas.getLeft().HasValue()){
-                let snapshots:NotaSnapshot[] = [];
-                for (const nota of notas.getLeft().getValue()){
-                    snapshots.push(nota.getSnapshot());
-                }
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>(snapshots));
-            }
-            else{
-                return Either.makeLeft<Optional<NotaSnapshot[]>, Error>(new Optional<NotaSnapshot[]>());
-            }
+    @Get('/:id/user/:idUser/')
+    async getNoteById(@Param('idUser') iduser ,@Param('id') id){
+        const query = new IdNotaQuery(iduser, id);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error);
+            //return Either.makeRight<NotaSnapshot[],HttpException>(error); 
         }
         else{
-            return Either.makeRight<Optional<NotaSnapshot[]>, Error>(notas.getRight());
-        }
+            return result;
+        }        
     }
+
+   /*  @Get('/user/:id')
+    async getNotesByUser(@Param('id') id, @Res({ passthrough: true }) res: Response){
+        const query = new UserNotaQuery(id);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>(result.getRight()));
+            return Either.makeRight<NotaSnapshot[],HttpException>(error);
+        }
+        return result;
+    } */
+
+    @Get('/user/:id/titulo/:title')
+    async getNotesByTitle(@Param('id') id, @Param('title') titulo){
+        const query = new TituloNotaQuery(id, titulo);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error); 
+        }
+        return result;
+    }
+
+    @Get('/user/:id/cuerpo/:body')
+    async getNotesByBody(@Param('id') id, @Param('body') cuerpo){
+        const query = new CuerpoNotaQuery(id, cuerpo);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error); 
+        }
+        return result;
+    }
+
+    @Get('/user/:id/creacion/:fecha')
+    async getNotesByFechaCreacion(@Param('id') id, @Param('fecha') fecha){
+        const query = new CreacionNotaQuery(id, fecha);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error); 
+        }
+        return result;
+    }
+
+    @Get('/user/:id/actualizacion/:fecha')
+    async getNotesByFechaActualizacion(@Param('id') id, @Param('fecha') fecha){
+        const query = new ActualizacionNotaQuery(id, fecha);
+        const result = await this.queryHandler.query(query);
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot[],HttpException>(error);     
+        }
+        return result;
+    }
+
+    //========================================================================================================//
+    //========================================================================================================//
+    //========================================================================================================//
+
+    //========================================================================================================//
+    //========================================================================================================//
+    //========================================================================================================//
+
 
     @Post()
     @UsePipes(ValidationPipe)
@@ -106,17 +198,11 @@ export class NotaController {
                                                             nuevaNota.fechaActualizacion, latitud, altitud, nuevaNota.usuarioId);
                                                                                         
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
-        console.log("RESULTDADO",result);    
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot,HttpException>(error); 
+        }  
         return result;
-    }
-
-    @Post('/testValidation')
-    @UsePipes(ValidationPipe)
-    async testValidation(@Body() nuevaNota:CrearNotaDTO){
-        const validacion:ParteCuerpoValidacion = new ParteCuerpoValidacion()
-        console.log(nuevaNota.cuerpo);
-        console.log("=============================================");
-        console.log(validacion.cuerpoValidacion(nuevaNota.cuerpo));
     }
 
     @Delete()
@@ -124,7 +210,10 @@ export class NotaController {
     async eliminarNota(@Body() nota:EliminarNotaDTO){
         const cmd:EliminarNotaComando = new EliminarNotaComando(nota.id,nota.fechaEliminacion, nota.usuarioId);
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
-
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot,HttpException>(error); 
+        }   
         return result;
     }
 
@@ -139,14 +228,14 @@ export class NotaController {
 
         const validacion:ParteCuerpoValidacion = new ParteCuerpoValidacion();
         if (cuerpo.HasValue() && (!validacion.cuerpoValidacion(nota.cuerpo))){
-            return new Error();
+            return Either.makeRight<NotaSnapshot,Error>(new BadRequestException("Cuerpo de la Nota Inválido"));
         }
 
         //Validar que un valor de ubicacion si se tiene pero el otro no
         if (!latitud.HasValue() && altitud.HasValue()){
-            return Either.makeRight<NotaSnapshot,Error>(new Error());
+            return Either.makeRight<NotaSnapshot,Error>(new BadRequestException("Latitud de la Nota Inválida"));
         } else if (latitud.HasValue() && !altitud.HasValue()){
-            return Either.makeRight<NotaSnapshot,Error>(new Error());
+            return Either.makeRight<NotaSnapshot,Error>(new BadRequestException("Altitud de la Nota Inválida"));
         }
 
         const cmd:ModificarNotaComando = new ModificarNotaComando(nota.id,nota.fechaActualizacion,titulo, 
@@ -154,7 +243,10 @@ export class NotaController {
                                                                     fechaeliminada, 
                                                                     latitud, altitud, nota.usuarioId);
         const result:Either<NotaSnapshot,Error> = await this.commandHandler.execute(cmd);
-
+        if (result.isRight()){
+            const error = this.errorHandler.transform(<AbstractException>result.getRight());
+            return Either.makeRight<NotaSnapshot,HttpException>(error); 
+        }  
         return result;
     }
 }

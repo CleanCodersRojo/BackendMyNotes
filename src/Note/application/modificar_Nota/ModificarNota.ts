@@ -6,9 +6,9 @@ import { FabricaNota } from "src/Note/domain/fabrics/FabricaNota";
 import { NotaSnapshot} from "../../domain/Snapshot/NotaSnapshot";
 import { RepositorioNota } from "src/Note/domain/repositories/RepositorioNota";
 import { Optional } from "src/Shared/utilities/Optional";
-import { TituloNota } from "src/Note/domain/value_objects/TituloNota";
-import { FechaNota } from "src/Note/domain/value_objects/FechaNota";
-import { UbicacionNota } from "src/Note/domain/value_objects/UbicacionNota";
+import { FabricaUser } from "src/User/domain/fabrics/fabricaUser";
+import { IdNota } from "src/Note/domain/value_objects/IdNota";
+import { NotFoundException } from "../_excepciones/NotFoundException";
 
 export class ModificarNota implements IServicio<NotaSnapshot>{
     private readonly repositorio:RepositorioNota;
@@ -18,14 +18,11 @@ export class ModificarNota implements IServicio<NotaSnapshot>{
     }
 
     public async execute(cmd:ModificarNotaComando):Promise<Either<NotaSnapshot, Error>>{
-        console.log("CMD", cmd);
-        console.log("=======================");
         //Buscar la nota primero de la base de datos
         let nota:Nota;
-        const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaNota.fabricarIdNota(cmd.id));
-
-        console.log("NOTA", nota);
-        console.log("=======================");
+        const idNota:IdNota = FabricaNota.fabricarIdNota(cmd.id);
+        const v1:Either<Optional<Nota>, Error> = await this.repositorio.buscarNotaPorId(FabricaUser.fabricarIdUser(cmd.usuarioId)
+                                                                                        ,idNota);
 
         //MANEJO DE EITHER Y OPTIONAL
         if (v1.isLeft()){
@@ -35,7 +32,7 @@ export class ModificarNota implements IServicio<NotaSnapshot>{
             }
             else {
                 //Error de Nota no encontrada
-                return Either.makeRight<NotaSnapshot, Error>(new Error());
+                return Either.makeRight<NotaSnapshot, Error>(new NotFoundException(idNota));
             }
         }
         else {
@@ -55,9 +52,6 @@ export class ModificarNota implements IServicio<NotaSnapshot>{
         if(cmd.altitud.HasValue() && cmd.latitud.HasValue()){
             nota.localizar(FabricaNota.fabricarUbicacion(cmd.latitud.getValue(), cmd.altitud.getValue()));
         }
-        
-        console.log("NOTA V2", nota);
-        console.log("=======================");
 
         //enviar la nota para que sea modificada
         const notaModificada:Either<Optional<Nota>, Error> = await this.repositorio.modificarNota(nota);
@@ -72,7 +66,7 @@ export class ModificarNota implements IServicio<NotaSnapshot>{
             }
             else{
                 //Error de Nota no encontrada
-                return Either.makeRight<NotaSnapshot, Error>(new Error());
+                return Either.makeRight<NotaSnapshot, Error>(new NotFoundException(idNota));
             }
         }
         else {

@@ -10,7 +10,6 @@ import { ConstructorParteCuerpo } from "../Shared_ParteCuerpo/ConstructorParteCu
 export class ConstructorTextoPlanoCuerpo implements ConstructorParteCuerpo{
     
     public fabricar(parte: ReceptorTextoCuerpo):ParteCuerpo{
-        console.log("FABRICA TEXTO ", new TextoPlanoCuerpo(parte.texto/*, parte.size, parte.color, parte.alineacion*/));
         return new TextoPlanoCuerpo(parte.texto/*, parte.size, parte.color, parte.alineacion*/);
     }
 

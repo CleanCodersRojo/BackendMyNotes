@@ -1,4 +1,4 @@
-import { ParteCuerpoSnapshot } from "src/Note/domain/Snapshot/ParteCuerpoSnapshot";
+import { ParteCuerpoSnapshot } from "../../../domain/Snapshot/ParteCuerpoSnapshot";
 import { Document } from "mongodb";
 
 export interface ConvertidorParteCuerpo{
