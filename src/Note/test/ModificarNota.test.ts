@@ -6,7 +6,7 @@ import { ModificarNota } from "../application/modificar_Nota/ModificarNota";
 import { Optional } from "../../Shared/utilities/Optional";
 import { ModificarNotaComando } from "../application/modificar_Nota/ModificarNotaComando";
 import { ReceptorParteCuerpo } from "../domain/fabrics/Shared_ParteCuerpo/ReceptorParteCuerpo"
-/*
+
 it('test_modify_note_with_all_fields', async () => {
     const repositorio = new MongoNotaAdapter(Model);
     const modificarNota = new ModificarNota(repositorio);
@@ -21,4 +21,4 @@ it('test_modify_note_with_all_fields', async () => {
     const cmd = new ModificarNotaComando(id, fechaActualizacion, titulo, cuerpo, fechaEliminacion, latitud, altitud, usuarioId);
     const result = await modificarNota.execute(cmd);
     expect(result.isLeft()).toBe(true);
-});*/
+});
