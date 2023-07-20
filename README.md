@@ -1,5 +1,10 @@
-Diagrama de Arquitectura Hexagonal
-![MODELO DE DOMINIO - Página 2](https://github.com/CleanCodersRojo/BackendMyNotes/assets/74473129/c73f9510-a19b-4693-8f41-e5c59ce41aa6)
+##Diagrama de Arquitectura Hexagonal
+- Diagrama de Modelo de Dominio
+![MODELO DE DOMINIO - Página 2](https://github.com/CleanCodersRojo/BackendMyNotes/assets/74473129/9136d983-366f-4bff-b6d6-873528fd5742)
+
+- Aplicacion e Infraestructura
+![MODELO DE DOMINIO - Copia de Página 2](https://github.com/CleanCodersRojo/BackendMyNotes/assets/74473129/ec05bd05-591e-4205-832c-f0594433edf3)
+
 
 ## Installation
 
